@@ -74,9 +74,22 @@ class ClientesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Clientes $clientes)
+    public function update(Request $request)
     {
-        //
+        $datos = request();
+
+        $cliente = Clientes::find($datos["id"]);
+
+        $cliente->update([
+            'cliente'=>$datos["cliente"],
+            'email'=>$datos["email"],
+            'direccion'=>$datos["direccion"],
+            'telefono'=>$datos["telefono"],
+            'fecha_nac'=>$datos["fecha_nac"],
+            'documento'=>$datos["documento"],
+        ]);
+
+        return redirect('Clientes')->with('success', 'El cliente fue actualizado');
     }
 
     /**
@@ -89,14 +102,50 @@ class ClientesController extends Controller
 
     public function ValidarDocumento(Request $request)
     {
-        $cliente = Clientes::where('documento', $request->documento)->exists();
+        if($request->id == 0){
 
-        if ($cliente == null) {
-            $respuesta = true;
+            $cliente = Clientes::where('documento', $request->documento)->exists();
+
+            if ($cliente == null) {
+                $respuesta = true;
+            } else {
+                $respuesta = false;
+            }
+            
         } else {
-            $respuesta = false;
-        }
+
+            $cliente = Clientes::find($request->id);
+
+            if ($cliente->documento != $request->documento) {
+
+                $documentoExiste = Clientes::where('documento', $request->documento)->exists();
+
+                if ($documentoExiste == null) {
+                    $respuesta = true;
+                } else {
+                    $respuesta = false;
+                }
+            } else {
+                $respuesta = false;
+            }
+
+            
+
+        }      
 
         return response()->json($respuesta);
     }
+
+
+    public function EliminarCliente($id_cliente)
+    {
+        $cliente = Clientes::find($id_cliente)->update(['estado'=>0]);
+        
+        return redirect('Clientes');
+
+    }
+
+
+
+
 }

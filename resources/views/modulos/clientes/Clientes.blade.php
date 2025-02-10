@@ -195,9 +195,10 @@
 
         <div class="modal-content">
 
-            <form action="" method="post">
+            <form method="post" action="{{ url('Actualizar-Cliente') }}">
 
                 @csrf
+                @method('PUT')
 
                 <div class="modal-header" style="background: #ffc107; color:black">
 

@@ -17,7 +17,7 @@ $("#nuevoDocumento").change(function () {
 
         url: 'Validar-Documento',
         type: 'POST',
-        data: {documento: document},
+        data: {documento: document, id: 0},
         success: function (respuesta) {
             if (!respuesta) {
                 $("#nuevoDocumento").parent().after('<div class="alert alert-danger">Documento existe</div>')
@@ -80,6 +80,31 @@ $("#documentoEditar").change(function () {
                 
             }
            
+        }
+    })
+})
+
+
+//ELIMINAR PRODUCTOS
+$(".table").on('click', '.btnEliminarCliente', function () {
+
+    var Cid = $(this).attr('idCliente')
+    var cliente = $(this).attr('cliente')
+
+    Swal.fire({
+
+        title: '¿Eliminar Cliente: '+ cliente +'?',
+        icon: 'warning',
+        showCancelButton: true,
+        cancelButtonText: 'Cancelar',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Eliminar',
+        confirmButtonColor: '#3085d6'
+    }).then((result)=> {
+
+        if (result.isConfirmed) {
+            
+            window.location = "Eliminar-Cliente/"+Cid
         }
     })
 })

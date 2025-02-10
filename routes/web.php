@@ -6,6 +6,7 @@ use App\Http\Controllers\ProductosController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuariosController;
 use App\Http\Controllers\SucursalesController;
+use App\Http\Controllers\VentasController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -69,3 +70,9 @@ Route::get('Clientes', [ClientesController::class, 'index']);
 Route::post('Clientes', [ClientesController::class, 'store']);
 Route::post('Validar-Documento', [ClientesController::class, 'ValidarDocumento']);
 Route::get('Editar-Cliente/{id_cliente}', [ClientesController::class, 'edit']);
+Route::put('Actualizar-Cliente', [ClientesController::class, 'update']);
+Route::get('Eliminar-Cliente/{id_producto}', [ClientesController::class, 'EliminarCliente']);
+
+
+//VENTAS
+Route::get('Ventas', [VentasController::class, 'VerVentas']);

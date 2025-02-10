@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-02-2025 a las 21:40:05
+-- Tiempo de generación: 09-02-2025 a las 21:22:34
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -65,6 +65,30 @@ INSERT INTO `categorias` (`id`, `nombre`, `updated_at`) VALUES
 (1, 'HERRAMIENTAS', '2025-02-02 12:30:35'),
 (3, 'ALAMBRES', '2025-02-02 13:26:12'),
 (4, 'BAÑERAS', '2025-02-02 23:35:01');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `clientes`
+--
+
+CREATE TABLE `clientes` (
+  `id` int(11) NOT NULL,
+  `cliente` text NOT NULL,
+  `documento` text NOT NULL,
+  `email` text NOT NULL,
+  `direccion` text NOT NULL,
+  `telefono` text NOT NULL,
+  `fecha_nac` text NOT NULL,
+  `estado` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `clientes`
+--
+
+INSERT INTO `clientes` (`id`, `cliente`, `documento`, `email`, `direccion`, `telefono`, `fecha_nac`, `estado`) VALUES
+(1, 'Zenen Client', '14695963', 'peraza@outlook.com', 'Barrio el Triunfo. Carrera 12 entre 3A y 4. Sector las Mercedes', '(04) 245-034-999_', '12/01/1980', 1);
 
 -- --------------------------------------------------------
 
@@ -196,9 +220,10 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('hkvBDHLbGtMR3FmvTSu7zca9uE4h0yoEMEAHVDqz', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiQm44bExad1dPQkNzczlNQ25WbU91Q0JSTGI0QTFrcWo4dEhWanRDUCI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjM3OiJodHRwOi8vbG9jYWxob3N0L3Bvcy9wdWJsaWMvUHJvZHVjdG9zIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTtzOjQ6ImF1dGgiO2E6MTp7czoyMToicGFzc3dvcmRfY29uZmlybWVkX2F0IjtpOjE3Mzg1MzAyOTE7fX0=', 1738543993),
-('MTyh15IPfl3ok9Q6q8ZstF9PVGFwpWR68VXzWgMy', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiM1AyMUlaYmNQSGdvRGhobTNSa3RrUTFBNHpodXZkNXlYWW1jS0kyMyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzc6Imh0dHA6Ly9sb2NhbGhvc3QvcG9zL3B1YmxpYy9Qcm9kdWN0b3MiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO3M6NDoiYXV0aCI7YToxOntzOjIxOiJwYXNzd29yZF9jb25maXJtZWRfYXQiO2k6MTczODYyMTIxMTt9fQ==', 1738622673),
-('tbHbv7zIEU7eihfWj9PyqqtKyGo0qBCFvD2hSVcE', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiVXZEM0R5MDRCcXk1bGJMUWUydmVMZk5IWHhvVzl4bUx2OUJublNpTyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzY6Imh0dHA6Ly9sb2NhbGhvc3QvcG9zL3B1YmxpYy9DbGllbnRlcyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7czo0OiJhdXRoIjthOjE6e3M6MjE6InBhc3N3b3JkX2NvbmZpcm1lZF9hdCI7aToxNzM4NzA3ODcyO319', 1738717890);
+('bJ4v5lgban6LjFo6q7NYZVvHG9RQT77TjLwQutBb', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiWEVSeGd6dFRnZFhxMmVQcjNjRkpya2RJNUppZktlMUFpbXFrNG9VTSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzY6Imh0dHA6Ly9sb2NhbGhvc3QvcG9zL3B1YmxpYy9DbGllbnRlcyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7czo0OiJhdXRoIjthOjE6e3M6MjE6InBhc3N3b3JkX2NvbmZpcm1lZF9hdCI7aToxNzM5MDU0NjA4O319', 1739067395),
+('cjazM5mHUV3nndlVRGZnB5DZCQTXKg5na65roCdG', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiR0htUHhFdHU4TmRMTFI2TGNjanBGSUR3WDlZZ2lmaEplVXFQY1dzaCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzY6Imh0dHA6Ly9sb2NhbGhvc3QvcG9zL3B1YmxpYy9DbGllbnRlcyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7czo0OiJhdXRoIjthOjE6e3M6MjE6InBhc3N3b3JkX2NvbmZpcm1lZF9hdCI7aToxNzM5MTI1OTc3O319', 1739126618),
+('kaVyVCpPiQhSL5dKdKDeJMHJV49xu4CamqH9vZsL', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoieWVWOFdQRnpTMm9YWnl4QzhGN05wdzJiRWoybDV5bjhhWG1HbWpzeSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzY6Imh0dHA6Ly9sb2NhbGhvc3QvcG9zL3B1YmxpYy9DbGllbnRlcyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7czo0OiJhdXRoIjthOjE6e3M6MjE6InBhc3N3b3JkX2NvbmZpcm1lZF9hdCI7aToxNzM5MTA2NDMwO319', 1739109650),
+('NFqP3YhWeNwuCcEdmzSMmzgJH3LIK77MLTeLSZnq', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiVHB3MzRDU21TM3Y0dXczTGUwNjJUeGoyRkNOMHY3R3FKNHV6WDZSZyI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjM2OiJodHRwOi8vbG9jYWxob3N0L3Bvcy9wdWJsaWMvQ2xpZW50ZXMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO3M6NDoiYXV0aCI7YToxOntzOjIxOiJwYXNzd29yZF9jb25maXJtZWRfYXQiO2k6MTczOTExNzAzMTt9fQ==', 1739117170);
 
 -- --------------------------------------------------------
 
@@ -250,7 +275,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `id_sucursal`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `foto`, `ultimo_login`, `estado`, `rol`, `created_at`, `updated_at`) VALUES
-(1, 2, 'Zenen Peraza A', 'peraza@outlook.com', NULL, '$2y$12$X92GsSPox5dTfoLGGj5FauRhG3/9t/J/AdzFqyEAbpfOcT/PbG21y', NULL, 'users/fmV7FUMJBSP2aNZH73qALU5jn44pgkarmmwoyClP.jpg', '2025-02-04 22:24:32', 1, 'Admin', '2025-01-25 20:03:20', '2025-02-05 02:24:32'),
+(1, 2, 'Zenen Peraza A', 'peraza@outlook.com', NULL, '$2y$12$X92GsSPox5dTfoLGGj5FauRhG3/9t/J/AdzFqyEAbpfOcT/PbG21y', NULL, 'users/fmV7FUMJBSP2aNZH73qALU5jn44pgkarmmwoyClP.jpg', '2025-02-09 18:32:57', 1, 'Admin', '2025-01-25 20:03:20', '2025-02-09 22:32:57'),
 (2, 2, 'Zenen Peraza', 'zenenperaza@gmail.com', NULL, '$2y$12$uQx0Xc1/rlgHagDnO.m2S.wjAeJOensnqHFQ8j7zvSBx2v3/tOKJm', NULL, '', '2025-01-29 00:11:42', 1, 'Encargado', '2025-01-25 20:03:20', '2025-02-03 01:32:21');
 
 --
@@ -273,6 +298,12 @@ ALTER TABLE `cache_locks`
 -- Indices de la tabla `categorias`
 --
 ALTER TABLE `categorias`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `clientes`
+--
+ALTER TABLE `clientes`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -343,6 +374,12 @@ ALTER TABLE `users`
 --
 ALTER TABLE `categorias`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `clientes`
+--
+ALTER TABLE `clientes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `failed_jobs`
