@@ -2,17 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Clientes;
+use App\Models\Sucursales;
 use App\Models\Ventas;
 use Illuminate\Http\Request;
 
 class VentasController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function VerVentas()
     {
-        //
+        $sucursales = Sucursales::where('estado', 1)->get();
+
+        $clientes = Clientes::where('estado', 1)->get();
+
+        return view('modulos.Ventas.Ventas', compact('sucursales', 'clientes'));
     }
 
     /**
