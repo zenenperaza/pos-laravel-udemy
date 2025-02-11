@@ -24,15 +24,47 @@ class VentasController extends Controller
 
         $clientes = Clientes::where('estado', 1)->get();
 
-        return view('modulos.Ventas.Ventas', compact('sucursales', 'clientes'));
+        $ventas = Ventas::all();    
+
+        return view('modulos.Ventas.Ventas', compact('sucursales', 'clientes', 'ventas'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function CrearVentas(Request $request)
     {
-        //
+        $datos = request();
+
+        $UltimaVenta = Ventas::orderBy('id', 'desc')->where('id_sucursal', $datos["id_sucursal"])->first();
+
+        if($UltimaVenta == null){
+            $codigo = $datos["id_sucursal"]*10000;
+        }else{
+            $codigo = $UltimaVenta["codigo"] + 1;
+        }
+        
+
+        // dd($datos["id_sucursal"]);
+
+        Ventas::create([
+    
+            'id_sucursal' => $datos["id_sucursal"],
+            'id_vendedor' => $datos["id_vendedor"],   
+            'id_cliente' => $datos["id_cliente"],    
+            'codigo' => $codigo,
+            'impuesto' => 0,
+            'neto' => 0,
+            'total' => 0,
+            'metodo_pago' => '',
+            'estado' => 'Creada'
+        ]);
+
+        $nuevaVenta = Ventas::orderBy('id', 'desc')->first();
+
+        return redirect('Venta/'.$nuevaVenta["id"]);
+
+    
     }
 
     /**

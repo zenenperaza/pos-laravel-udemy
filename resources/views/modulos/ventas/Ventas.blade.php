@@ -20,6 +20,59 @@
 
             <div class="body">
 
+                <table class="table table-bordered table-striped table-hover dt-responsive">
+
+                    <thead>
+
+                        <tr>
+                            <th style="width: 10px">#</th>
+                            <th>Codigo factura</th>
+                            <th>Cliente</th>
+                            <th>Vendedor</th>
+                            <th>Metodo pago</th>
+                            <th>Neto</th>
+                            <th>Total</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Sucursal</th>
+                            <th>Impuesto</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach ($ventas as $key => $venta)
+                            <tr>
+                                <th style="width: 10px">{{ $key +  1 }}</th>
+                                <th>
+                                    {{ $venta->codigo }}
+                                </th>
+                                <th>{{ $venta->VENDEDOR->name }}</th>
+                                <th>{{ $venta->CLIENTE->cliente }}</th>
+                                <th>{{ $venta->metodo_pago }}</th>
+                                <th>$ {{ number_format( $venta->neto , 2, ',', '.' ) }}</th>
+                                <th>
+                                    $ {{ number_format( $venta->total, 2, ',', '.' ) }}
+                                </th>
+                                <th>{{ $venta->fecha }}</th>
+                                <th>{{ $venta->estado }}</th>
+                                <th>{{ $venta->id_sucursal }}</th>
+                                <th>$ {{ $venta->impuesto }}</th>
+                                <th>
+                                    <a href="{{ url('Venta/'.$venta->id) }}">
+                                        <button class="btn btn-primary btnEditarVenta" >Administrar</button>
+                                    </a>
+                                    <button class="btn btn-danger btnEliminarVenta" idVenta="{{ $venta->id }}" venta="{{ $venta->venta }}" ><i class="fa fa-trash"></i></button>
+                                </th> 
+
+                            </tr>
+                        @endforeach
+
+                    </tbody>
+                </table>
+
+
             </div>
         </div>
 
@@ -34,6 +87,8 @@
         <div class="modal-content">
 
             <form action="" method="post">
+
+                @csrf
 
                 <div class="modal-header" style="background: #3c8dbc; color:white">
 
@@ -90,11 +145,11 @@
 
                                 <span class="input-group-addon"><i class="fa fa-building"></i></span>
 
-                                    <select name="id_cliente" id="" class="form-control input-lg" required>
-                                        <option value="">Seleccionar Cliente</option>
+                                    <select name="id_venta" id="" class="form-control input-lg" required>
+                                        <option value="">Seleccionar Venta</option>
 
-                                        @foreach($clientes as $cliente)
-                                            <option value="{{ $cliente->id }}">{{ $cliente->cliente }} - {{ $cliente->documento }}</option>
+                                        @foreach($ventas as $venta)
+                                            <option value="{{ $venta->id }}">{{ $venta->venta }} - {{ $venta->documento }}</option>
                                         @endforeach
 
                                     </select>                       
@@ -115,7 +170,7 @@
 
                     <button class="btn btn-danger pull-left" type="button" data-dismiss="modal">Salir</button>
                     
-                    <button class="btn btn-primary" type="submit" >Agregar Susucrsla</button>
+                    <button class="btn btn-primary" type="submit" >Crear Venta</button>
 
 
                 </div>

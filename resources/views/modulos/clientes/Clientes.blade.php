@@ -52,8 +52,8 @@
                                     {{ $cliente->direccion }}
                                 </th>
                                 <th>{{ $cliente->fecha_nac }}</th>
-                                <th></th>
-                                <th></th>
+                                <th>{{ $cliente->cantidad_compras }}</th>
+                                <th>{{ $cliente->ultima_compra }}</th>
                                 <th>
                                     <button class="btn btn-warning btnEditarCliente" idCliente="{{ $cliente->id }}"  cliente="{{ $cliente->cliente }}" data-toggle="modal" data-target="#modalEditarCliente"><i class="fa fa-pencil"></i></button>
                                     <button class="btn btn-danger btnEliminarCliente" idCliente="{{ $cliente->id }}" cliente="{{ $cliente->cliente }}" ><i class="fa fa-trash"></i></button>

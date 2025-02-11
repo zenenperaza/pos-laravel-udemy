@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Clientes;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class ClientesController extends Controller
@@ -16,7 +17,14 @@ class ClientesController extends Controller
      */
     public function index()
     {
-        $clientes = Clientes::where('estado', 1)->get();
+        // $clientes = Clientes::where('estado', 1)->get();
+
+        $clientes = Clientes::where('clientes.estado',1)->leftJoin('ventas', 'clientes.id', '=', 'ventas.id_cliente')
+        ->select('clientes.id', 'clientes.cliente', 'clientes.email', 'clientes.telefono', 'clientes.documento', 'clientes.direccion', 'clientes.fecha_nac', 'clientes.estado')
+        ->selectRaw("MAX(ventas.fecha) as ultima_compra")
+        ->selectRaw("COUNT(ventas.id) as cantidad_compras")
+        ->groupBy('clientes.id', 'clientes.cliente', 'clientes.email', 'clientes.telefono', 'clientes.documento', 'clientes.direccion', 'clientes.fecha_nac', 'clientes.estado')
+        ->get();
 
         return view('modulos.clientes.Clientes', compact('clientes'));
     }

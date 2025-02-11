@@ -10,7 +10,7 @@ class Ventas extends Model
     protected $table = "ventas";
 
     protected $fillable = [
-        'id_sucursal ',
+        'id_sucursal',
         'codigo',
         'id_cliente',
         'id_vendedor',
@@ -24,4 +24,18 @@ class Ventas extends Model
 
     
     public $timestamps = false;
+
+    public function VENDEDOR()
+    {
+        return $this->belongsTo(User::class, 'id_vendedor');
+    }
+
+    public function CLIENTE()
+    {
+        return $this->belongsTo(Clientes::class, 'id_cliente');
+    }
+
+
+
+    
 }
