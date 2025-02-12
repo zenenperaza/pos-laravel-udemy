@@ -77,3 +77,4 @@ Route::get('Eliminar-Cliente/{id_producto}', [ClientesController::class, 'Elimin
 //VENTAS
 Route::get('Ventas', [VentasController::class, 'VerVentas']);
 Route::post('Ventas', [VentasController::class, 'CrearVentas']);
+Route::get('Venta/{id_venta}', [VentasController::class, 'AdminstrarVenta']);

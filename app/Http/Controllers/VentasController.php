@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Clientes;
+use App\Models\Productos;
 use App\Models\Sucursales;
 use App\Models\Ventas;
 use Illuminate\Http\Request;
@@ -105,5 +106,13 @@ class VentasController extends Controller
     public function destroy(Ventas $ventas)
     {
         //
+    }
+
+    public function AdminstrarVenta($id_venta)
+    {
+        $venta = Ventas::find($id_venta);
+        $productos = Productos::all();
+
+        return view('modulos.Ventas.Venta', compact('venta', 'productos'));
     }
 }

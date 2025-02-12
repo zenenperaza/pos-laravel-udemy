@@ -18,7 +18,7 @@
                 <button class="btn btn-primary"  data-toggle="modal" data-target="#modalAgregarSucursal">Agregar Sucursal</button>
             </div>
 
-            <div class="body">
+            <div class="box-body">
 
             </div>
         </div>
@@ -104,23 +104,7 @@
 
                     <div class="box-body">
 
-                        <div class="form-group">
-
-                            <div class="input-group">
-
-                                <span class="input-group-addon"><i class="fa fa-th"></i></span>
-
-                                <select name="id_categoria" id="selectCategoria" class="form-control input-lg">
-
-                                    <option value="">Seleccionar Categoría</option>
-
-                            
-                                </select>
-
-
-                            </div>
-
-                        </div>
+             
 
                             {{-- CODIGO --}}
 
@@ -137,108 +121,7 @@
 
                         </div>
 
-                            {{-- DESCRIPCION --}}
-
-                        <div class="form-group">
-
-                            <div class="input-group">
-
-                                <span class="input-group-addon"><i class="fa fa-product-hunt"></i></span>
-
-                                <input type="text" class="form-control input-lg input__text" id="" name="descripcion" required placeholder="Descripcion">
-
-
-                            </div>
-                        </div>
-
-                        {{-- STOCK --}}
-
-                        <div class="form-group">
-
-                            <div class="input-group">
-
-                                <span class="input-group-addon"><i class="fa fa-check"></i></span>
-
-                                <input type="number" min="0" class="form-control input-lg input__text" id="" name="stock" placeholder="Stock" required>
-
-
-                            </div>
-                        </div>
-
-                        {{-- PRECIOS --}}
-
-                        <div class="form-group row">
-
-                            <div class="col-xs-6">
-
-                                <div class="input-group">
-            
-                                    <span class="input-group-addon"><i class="fa fa-arrow-up"></i></span>
-            
-                                    <input type="number" min="0" class="form-control input-lg input__text" id="precioCompra" name="precio_compra" placeholder="Precio compra" >
-            
-                                    
-                                </div>
-                            </div>
-
-                            <div class="col-xs-6">
-            
-                                    <div class="input-group">
-                
-                                        <span class="input-group-addon"><i class="fa fa-arrow-down"></i></span>
-                
-                                        <input type="number" min="0" class="form-control input-lg input__text" id="precioVenta" name="precio_venta" placeholder="Precio venta" >
-                
-                
-                                    </div>
-                        
-
-                                <br>
-
-                            
-
-                                <div class="col-xs-6">
-                
-                                    <div class="input-group">
-                
-                                    <label for="">
-                                            <input type="checkbox" class="minimal porcentaje" checked>
-                                            Utilizar porcentaje
-                                    </label>
-                
-                                    </div>
-                                </div>                   
-
-                                <div class="col-xs-6" style="padding:0">
-                
-                                    <div class="input-group">
-                
-                                        <input type="number" min="0" class="form-control input-lg input__text " id="valorPorcentaje" name="impuesto" value="40" required>
-                                        <span class="input-group-addon"><i class="fa fa-percent"></i></span>
-                    
-                
-                                    </div>
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        {{-- IMAGEN --}}
-
-                        <div class="form-group">
-
-                            <div class="input-group">
-
-                                <div class="panel">SUBIR IMAGEN</div>
-
-                                <input type="file" class="form-control input-lg input__text" id="" name="imagen" >
-
-                                <img src="{{ url('storage/productos/default.png') }}" alt="" class="img-thumbnail " width="100px">
-
-                            </div>
-
-                        </div>                     
+                                   
 
                           
                     </div>
