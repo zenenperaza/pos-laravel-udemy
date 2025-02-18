@@ -82,7 +82,7 @@
 </div>
     
 
-<div class="modal fade" id="modalAgregarSucursal">
+<div class="modal fade" id="modalAgregarProductoVenta">
 
     <div class="modal-dialog">
 

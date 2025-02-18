@@ -17,7 +17,6 @@
             {{-- FORMULARIO DE VENTAS --}}
             <div class="col-lg-5 col-xs-12">
 
-
                 <div class="box box-success">
 
                     <div class="box-header with-border">
@@ -69,33 +68,12 @@
 
                                     <input type="hidden" value="{{ $venta->id }}" id="idVenta" name="">
                                     <input type="hidden" value="{{ url('') }}" id="url" name="">
-
-                                    <div class="row producto-item" id="prod-id" style="padding: 5px 15px">
-
-                                        <div class="col-xs-6" style="padding-right: 0px">
-
-                                            <div class="input-group">
-
-                                                <span class="input-group-addon">
-
-                                                    <button class="btn btn-danger btn-xs">
-                                                        <i class="fa fa-times">
-
-                                                        </i>
-                                                    </button>
-                                                </span>
-
-                                                <input type="text" class="form-control" value="Producto" readonly>  
-
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <input type="hidden" value="{{ $venta->estado  }}" id="estado" name="">
 
 
                                 </div>
 
-                                <button class="btn btn-default hidden-lg">Agregar Producto</button>
+                                <button class="btn btn-default hidden-lg" data-toggle="modal" data-target="#modalAgregarProductoVenta" >Agregar Producto</button>
 
                                 <hr>
 
@@ -227,7 +205,7 @@
                                                 
                                                 @if ($producto->stock <= 10)
 
-                                                    <span class="badge bg-green">{{ $producto->stock }}</span>
+                                                    <span class="badge bg-red">{{ $producto->stock }}</span>
                                                     
                                                 @elseif ($producto->stock >= 11 && $producto->stock <= 20)
 
@@ -235,20 +213,29 @@
                                                 
                                                 @else 
 
-                                                    <span class="badge bg-red">{{ $producto->stock }}</span>
+                                                    <span class="badge bg-green">{{ $producto->stock }}</span>
                                                     
                                                 @endif
                                             </td>                                                                     
-                                            <td>       
-                                                
-                                                @if ($producto->stock > 0)
+                                            <td>  
+                                                @if($venta->estado != 'Finalizada')
+
+                                                        @if($producto->stock > 0)   
+                                                        
+                                                            @if ($producto->en_venta)
+                                                                <button class="btn btn-default"  id="producto-{{ $producto->id }}"  >Agregar</button>           
+                                                            @else                                                            
+                                                                <button class="btn btn-primary AgregarProducto"  id="producto-{{ $producto->id }}" idProducto="{{ $producto->id }}" stock="{{ $producto->stock }}">Agregar</button>                                                        
+                                                            @endif
+                                                           
+                                                        @else                                                        
+                                                            <button class="btn btn-default"  id="producto-{{ $producto->id }}"  >Agregar</button>                                                        
+                                                        @endif   
+
                                                     
-                                                    <button class="btn btn-primary" >Agregar</button>
                                                     
-                                                @else
-                                                    
-                                                    <button class="btn btn-default" disabled >Sin Stock</button>
-                                                @endif
+                                                @endif     
+                                          
                                         
                                                
                                                 
@@ -274,50 +261,115 @@
 
 </div>
 
-<div class="modal fade" id="modalAgregarSucursal">
+<div class="modal fade" id="modalAgregarProductoVenta">
 
     <div class="modal-dialog">
 
         <div class="modal-content">
 
-            <form action="" method="post">
+            <form action="" method="post" enctype="multipart/form-data">
+
+                @csrf
 
                 <div class="modal-header" style="background: #3c8dbc; color:white">
 
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
 
-                    <h4 class="modal-title">Agregar Sucursal</h4>
+                    <h4 class="modal-title">Agregar productos</h4>
 
                 </div>
 
                 <div class="modal-body">
 
-                    <div class="box-body">
+                    <div class="box-body">          
 
-                        <div class="form-group">
+                        <table class="table table-bordered table-striped table-hover dt-responsive">
 
-                            <div class="input-group">
+                            <thead>
+        
+                                <tr>
+                                    <th style="width: 10px">#</th>
+                                    <th>Imagen</th>
+                                    <th>Codigo factura</th>
+                                    <th>Descripcion</th>
+                                    <th>Stock</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+        
+                            <tbody>
+        
+                                @foreach ($productos as $key => $producto)
+                                    <tr>
+                                        <td style="width: 10px">{{ $key +  1 }}</td>
+                                        <td>
+                                            @if ($producto->imagen != '')
+                                                <img src="{{ url('storage/'.$producto->imagen) }}" alt="{{ $producto->producto }}" class="img-thumbnail" width="40px">
+                                                
+                                            @else
 
-                                <span class="input-group-addon"><i class="fa fa-building"></i></span>
+                                                <img src="{{ url('storage/productos/default.png') }}" alt="" class="img-thumbnail" width="40px">
+                                                
+                                            @endif
+                                        
+                                        </td>
+                                        <td>{{ $producto->codigo }}</td>
+                                        <td>{{ $producto->descripcion }}</td>
+                                        <td>
+                                            
+                                            @if ($producto->stock <= 10)
 
-                                <input type="text" name="nombre" id="" class="form-control input-lg" placeholder="Ingresar Sucursal" required>    
+                                                <span class="badge bg-red">{{ $producto->stock }}</span>
+                                                
+                                            @elseif ($producto->stock >= 11 && $producto->stock <= 20)
 
-                            </div>
+                                                <span class="badge bg-yellow">{{ $producto->stock }}</span>
+                                            
+                                            @else 
 
+                                                <span class="badge bg-green">{{ $producto->stock }}</span>
+                                                
+                                            @endif
+                                        </td>                                                                     
+                                        <td>  
+                                            @if ($venta->estado != 'Finalizada')
+
+                                                    @if ($producto->stock > 0)   
+                                                    
+                                                        @if ($producto->en_venta)
+                                                            <button class="btn btn-default" id="productoModal-{{ $producto->id }}" >Agregar</button>           
+                                                        @else                                                            
+                                                            <button class="btn btn-primary AgregarProducto" id="productoModal-{{ $producto->id }}" idProducto="{{ $producto->id }}">Agregar</button>                                                        
+                                                        @endif
+                                                       
+                                                    @else                                                        
+                                                        <button class="btn btn-default"  id="productoModal-{{ $producto->id }}"  >Agregar</button>                                                        
+                                                    @endif   
+
+                                                
+                                                
+                                            @endif     
+                                      
+                                    
+                                           
+                                            
+                                        </td> 
+        
+                                    </tr>
+                                @endforeach
+        
+                            </tbody>
+                        </table>
+        
                           
-                        </div>
-
                     </div>
 
-                </div>
+                </div>             
 
                 <div class="modal-footer">
 
-                    <button class="btn btn-danger pull-left" type="button" data-dismiss="modal">Salir</button>
-                    
-                    <button class="btn btn-primary" type="submit" >Agregar Susucrsla</button>
-
-
+                    <button class="btn btn-danger pull-left" data-dismiss="modal">Salir</button>
+                   
                 </div>
 
             </form>

@@ -108,6 +108,7 @@
 <script src="{{ url('js/usuarios.js') }}"></script>
 <script src="{{ url('js/productos.js') }}"></script>
 <script src="{{ url('js/clientes.js') }}"></script>
+<script src="{{ url('js/ventas.js') }}"></script>
 
 <!-- sweet alert 2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

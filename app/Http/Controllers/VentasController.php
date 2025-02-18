@@ -7,6 +7,7 @@ use App\Models\Productos;
 use App\Models\Sucursales;
 use App\Models\Ventas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class VentasController extends Controller
 {
@@ -95,24 +96,75 @@ class VentasController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Ventas $ventas)
+    public function AgregarProductoVenta(Request $request)
     {
-        //
+        // dd($request->idVenta);
+        $producto = Productos::find($request->idProducto);
+
+    // dd($producto);
+
+        DB::table('venta_productos')->insert([
+            'id_venta' => $request->idVenta,
+            'id_producto' => $producto->id,
+            'cantidad' => 1,
+            'precio' => $producto->precio_venta
+        ]);
+
+        Ventas::find($request->idVenta)->update([
+            'estado' => 'En Proceso'
+        ]);
+
+        return response()->json([
+            
+            'id' => $producto->id,
+            'descripcion' => $producto->descripcion,
+            'stock' => $producto->stock,
+            'cantidad' => 1,
+            'precio_venta' => $producto->precio_venta
+
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Ventas $ventas)
+    public function CargarProductosVenta($id_venta)
     {
-        //
+        $productos = DB::table('venta_productos')
+        ->join('productos', 'venta_productos.id_producto', '=', 'productos.id')
+        ->where('venta_productos.id_venta', $id_venta)
+        ->get();
+
+        return response()->json(['productos' => $productos]);
     }
+
+
 
     public function AdminstrarVenta($id_venta)
     {
         $venta = Ventas::find($id_venta);
-        $productos = Productos::all();
+
+        $productos = Productos::leftJoin('venta_productos', function($join) use ($id_venta){
+            $join->on('productos.id', '=', 'venta_productos.id_producto')
+            ->where('venta_productos.id_venta', $id_venta);
+        })->select('productos.*', 'venta_productos.id as en_venta')
+        ->get();
+
+        // dd($productos);
 
         return view('modulos.Ventas.Venta', compact('venta', 'productos'));
     }
+
+
+    public function QuitarProductoVenta(Request $request)
+    {
+        DB::table('venta_productos')->where('id_venta', $request->idVenta)
+        ->where('id_producto', $request->idProducto)
+        ->delete();
+
+
+    }
+
+
+
 }
