@@ -64,6 +64,7 @@ $(".table").on("click", ".AgregarProducto", function () {
 
             )
            
+            PrecioVenta()
             
         }
     });
@@ -135,9 +136,7 @@ function CargarProductosVenta() {
                                         '<div class="col-xs-3" style="padding-right: 0px">'+
 
                                             '<div class="input-group">'+
-
                                                 '<span class="input-group-addon"><i class="ion ion-social-usd"></i></span>'+
-
                                             '<input type="text" class="form-control nuevoPrecioProducto" id="precio-p-'+respuesta.id+'" precioReal="'+respuesta.precio_venta+'" value="'+respuesta.precio_venta+'" readonly>'+
 
                                             '</div>'+
@@ -154,6 +153,8 @@ function CargarProductosVenta() {
                                     '</div>'
 
             )
+
+            PrecioVenta()
             
             });
 
@@ -184,9 +185,13 @@ $(".ProductosVenta").on("click", ".QuitarProductoVenta", function () {
             $("#productoModal-"+idProducto).addClass("btn-primary AgregarProducto").removeClass("btn-default");
 
             $("#prod-"+idProducto).hide().removeAttr('id')
-        
-        }
+
+            $("#precio-p-"+idProducto).removeClass("nuevoPrecioProducto")
+
+            PrecioVenta()             }
     });
+
+    PrecioVenta()
 
 
 });
@@ -202,12 +207,80 @@ $(".ProductosVenta").on("change", ".nuevaCantidadProducto", function () {
     var precioFinal = cantidad * precio
 
     $("#precio-p-"+idProducto).val(precioFinal)
+    
+    $("#cantidad-p-"+idProducto).hide()
+
+    PrecioVenta()
 
     if (Number(cantidad) > Number(stock)) {
         $(this).val(stock)        
         $("#precio-p-"+idProducto).val(stock * precio)
         $("#cantidad-p-"+idProducto).show()
 
+        PrecioVenta()
+
+    }
+
+
+});
+
+
+$(".ProductosVenta").on("keyup", ".nuevaCantidadProducto", function () {
+
+    var idProducto = $(this).attr('idProducto')
+    var stock = $(this).attr('stock')
+    var cantidad = $(this).val()
+    var precio = $("#precio-p-"+idProducto).attr('precioReal')
+
+    var precioFinal = cantidad * precio
+
+    $("#precio-p-"+idProducto).val(precioFinal)
+    
+    $("#cantidad-p-"+idProducto).hide()
+
+    PrecioVenta()
+
+    if (Number(cantidad) > Number(stock)) {
+        $(this).val(stock)        
+        $("#precio-p-"+idProducto).val(stock * precio)
+        $("#cantidad-p-"+idProducto).show()
+
+        PrecioVenta()
     }
 
 });
+
+$("#nuevoImpuestoVenta").on("change", PrecioVenta)
+
+function PrecioVenta() {
+    
+    const precioProductos = document.querySelectorAll('.nuevoPrecioProducto')
+
+    let sumaTotal = 0
+
+    precioProductos.forEach(precio => {
+
+        const valor = parseFloat(precio.value) || 0
+
+        sumaTotal += valor
+
+    })
+
+    $("#nuevoPrecioNeto").val(sumaTotal)
+
+    var impuesto = $("#nuevoImpuestoVenta").val()
+
+    if(impuesto == 0) {
+
+        $("#nuevoPrecioTotal").val(sumaTotal)
+
+    }else{
+
+        var precioImpuesto = Number(sumaTotal * impuesto / 100)
+
+        var totalConImpuesto = Number(precioImpuesto) + Number(sumaTotal)
+        
+        $("#nuevoPrecioTotal").val(totalConImpuesto)
+    }
+
+}   

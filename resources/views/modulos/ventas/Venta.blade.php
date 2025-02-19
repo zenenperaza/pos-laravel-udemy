@@ -99,7 +99,12 @@
 
                                                         <div class="input-group">
 
-                                                            <input type="number" class="form-control input-lg" min="0" name="" id="" value="" placeholder="0" required>
+                                                            <input type="number" class="form-control input-lg" min="0" name="" id="nuevoImpuestoVenta" value="{{ $venta->impuesto }}" placeholder="0" 
+                                                            @if ($venta->estado == 'Finalizada')
+                                                                readonly                                                                
+                                                            @endif
+                                                            >
+                                                           <input type="hidden" id="nuevoPrecioNeto" > 
                                                         </div>
 
                                                     </td>
@@ -110,7 +115,7 @@
 
                                                             <span class="input-group-addon"><i class="ion ion-social-usd"></i></span>
 
-                                                            <input type="number" class="form-control input-lg" min="0" name="" id="" value="" placeholder="0000" readonly required>
+                                                            <input type="number" class="form-control input-lg" min="0" name="" id="nuevoPrecioTotal" value="" placeholder="0000" readonly required>
                                                         </div>
 
                                                     </td>
@@ -124,21 +129,42 @@
                                 <hr>
 
                                 <div class="form-group row">
+
+                                    @if ($venta->estado != 'Finalizada')
+
+                                        <div class="col-xs-6" style="padding-right: 0px">
     
-                                    <div class="col-xs-6" style="padding-right: 0px">
-    
-                                        <div class="input-group">
-    
-                                            <select name="" id="" class="form-control" required>
-    
-                                                <option value=""> Seleccione metodo de pago</option>
-                                                <option value="Efectivo"> Efectivo</option>
-                                                <option value="TDC"> Tarjeta DC</option>
-                                                <option value="TDD"> Tarjeta DD</option>
-                                            </select>
+                                            <div class="input-group">
+        
+                                                <select name="" id="nuevoMetodoPago" class="form-control" required>
+        
+                                                    <option value=""> Seleccione metodo de pago</option>
+                                                    <option value="Efectivo"> Efectivo</option>
+                                                    <option value="TDC"> Tarjeta DC</option>
+                                                    <option value="TDD"> Tarjeta DD</option>
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                        
+                                        <div class="cajasMetodoPago">
                                         </div>
 
-                                    </div>
+                                    @else
+
+                                        <div class="col-xs-12" style="padding-right: 0px">
+                                            <h4>Metodo de pago: <b>{{ $venta->metodo_pago }}</b> </h4>
+
+                                        </div>
+
+                                    @endif
+    
+                               
+
+
+
+
+
     
                                 </div>
 
