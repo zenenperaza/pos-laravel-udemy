@@ -148,7 +148,7 @@
                                         </div>
                                         
                                         <div class="cajasMetodoPago">
-                                        </div>
+                                        </div>                                   
 
                                     @else
 

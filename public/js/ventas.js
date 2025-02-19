@@ -188,7 +188,8 @@ $(".ProductosVenta").on("click", ".QuitarProductoVenta", function () {
 
             $("#precio-p-"+idProducto).removeClass("nuevoPrecioProducto")
 
-            PrecioVenta()             }
+            PrecioVenta()             
+        }
     });
 
     PrecioVenta()
@@ -284,3 +285,97 @@ function PrecioVenta() {
     }
 
 }   
+
+
+$("#nuevoMetodoPago").on("change", function () {
+
+    
+
+    var metodo = $(this).val()
+
+    console.log(metodo);
+    
+
+    if(metodo == 'Efectivo') {
+
+        $(this).parent().parent().removeClass('col-xs-6').addClass('col-xs-4')
+        $(this).parent().parent().parent().children(".cajasMetodoPago").html(
+            '<div class="col-xs-4">'+
+                                            
+                    '<div class="input-group">'+
+
+                        '<span class="input-group-addon"><i class="ion ion-social-usd"></i></span>'+
+                        '<input type="text" class="form-control input-lg" id="nuevoValorEfectivo" value="" placeholder="0000">'+
+
+                    '</div>'+
+
+                '</div> '+
+
+                '<div class="col-xs-4" id="capturarCambioEfectivo" style="padding-left:0px">'+
+
+                    '<div class="input-group">'+
+
+                        '<span class="input-group-addon"><i class="ion ion-social-usd"></i></span>'+
+                        '<input type="text" class="form-control input-lg" id="nuevoCambioEfectivo" value="" placeholder="0000">'+
+
+                    '</div>'+
+
+                '</div>'
+        
+        )
+
+    } else {
+
+        $(this).parent().parent().removeClass('col-xs-6').addClass('col-xs-4')
+        $(this).parent().parent().parent().children(".cajasMetodoPago").html(
+
+            '<div class="col-xs-6" style="padding-left:0px">'+
+                                            
+                    '<div class="input-group">'+
+
+                        '<input type="number" class="form-control input-lg" id="nuevoCodigoTransaccion" value="" placeholder="Codigo de transaccion">'+
+
+                        '<span class="input-group-addon"><i class="fa fa-lock"></i></span>'+
+
+                    '</div>'+
+
+                '</div> '
+
+        
+        )
+
+    }
+
+})
+
+
+$(document).on("keyup", "#nuevoValorEfectivo", function () {
+
+    var efectivo = $(this).val()
+    var totalVenta = $("#nuevoPrecioTotal").val()
+
+    var cambio = efectivo - totalVenta
+
+    if(cambio >= 0){
+        $("#nuevoCambioEfectivo").val(cambio)
+    }else{
+        $("#nuevoCambioEfectivo").val(0)
+    }
+
+})
+
+
+$(document).on("change", "#nuevoValorEfectivo", function () {
+
+    var efectivo = $(this).val()
+    var totalVenta = $("#nuevoPrecioTotal").val()
+
+    var cambio = efectivo - totalVenta
+
+    if(cambio >= 0){
+        $("#nuevoCambioEfectivo").val(cambio)
+    }else{
+        $("#nuevoCambioEfectivo").val(0)
+    }
+    
+})
