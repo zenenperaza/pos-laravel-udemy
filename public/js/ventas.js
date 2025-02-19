@@ -287,62 +287,69 @@ function PrecioVenta() {
 }   
 
 
-$("#nuevoMetodoPago").on("change", function () {
+$("#nuevoMetodoPago").on("change", function () {    
 
+    var metodo = $(this).val()   
     
+    if (metodo != 0) {
 
-    var metodo = $(this).val()
-
-    console.log(metodo);
-    
-
-    if(metodo == 'Efectivo') {
-
-        $(this).parent().parent().removeClass('col-xs-6').addClass('col-xs-4')
-        $(this).parent().parent().parent().children(".cajasMetodoPago").html(
-            '<div class="col-xs-4">'+
-                                            
-                    '<div class="input-group">'+
-
-                        '<span class="input-group-addon"><i class="ion ion-social-usd"></i></span>'+
-                        '<input type="text" class="form-control input-lg" id="nuevoValorEfectivo" value="" placeholder="0000">'+
-
-                    '</div>'+
-
-                '</div> '+
-
-                '<div class="col-xs-4" id="capturarCambioEfectivo" style="padding-left:0px">'+
-
-                    '<div class="input-group">'+
-
-                        '<span class="input-group-addon"><i class="ion ion-social-usd"></i></span>'+
-                        '<input type="text" class="form-control input-lg" id="nuevoCambioEfectivo" value="" placeholder="0000">'+
-
-                    '</div>'+
-
-                '</div>'
+        $("#btnFinalizarVenta").show()
         
-        )
+        if(metodo == 'Efectivo') {
 
+            $(this).parent().parent().removeClass('col-xs-6').addClass('col-xs-4')
+            $(this).parent().parent().parent().children(".cajasMetodoPago").html(
+                '<div class="col-xs-4">'+
+                                                
+                        '<div class="input-group">'+
+
+                            '<span class="input-group-addon"><i class="ion ion-social-usd"></i></span>'+
+                            '<input type="text" class="form-control input-lg" id="nuevoValorEfectivo" value="" placeholder="0000">'+
+
+                        '</div>'+
+
+                    '</div> '+
+
+                    '<div class="col-xs-4" id="capturarCambioEfectivo" style="padding-left:0px">'+
+
+                        '<div class="input-group">'+
+
+                            '<span class="input-group-addon"><i class="ion ion-social-usd"></i></span>'+
+                            '<input type="text" class="form-control input-lg" id="nuevoCambioEfectivo" value="" placeholder="0000">'+
+
+                        '</div>'+
+
+                    '</div>'
+            
+            )
+
+        } else {
+
+            $(this).parent().parent().removeClass('col-xs-6').addClass('col-xs-4')
+            $(this).parent().parent().parent().children(".cajasMetodoPago").html(
+
+                '<div class="col-xs-6" style="padding-left:0px">'+
+                                                
+                        '<div class="input-group">'+
+
+                            '<input type="number" class="form-control input-lg" id="nuevoCodigoTransaccion" value="" placeholder="Codigo de transaccion">'+
+
+                            '<span class="input-group-addon"><i class="fa fa-lock"></i></span>'+
+
+                        '</div>'+
+
+                    '</div> '
+
+            
+            )
+
+        }
+        
     } else {
 
-        $(this).parent().parent().removeClass('col-xs-6').addClass('col-xs-4')
-        $(this).parent().parent().parent().children(".cajasMetodoPago").html(
-
-            '<div class="col-xs-6" style="padding-left:0px">'+
-                                            
-                    '<div class="input-group">'+
-
-                        '<input type="number" class="form-control input-lg" id="nuevoCodigoTransaccion" value="" placeholder="Codigo de transaccion">'+
-
-                        '<span class="input-group-addon"><i class="fa fa-lock"></i></span>'+
-
-                    '</div>'+
-
-                '</div> '
-
-        
-        )
+        $("#btnFinalizarVenta").hide()
+        $(this).parent().parent().removeClass('col-xs-4').addClass('col-xs-6')  
+        $(this).parent().parent().parent().children(".cajasMetodoPago").html('')
 
     }
 
@@ -378,4 +385,64 @@ $(document).on("change", "#nuevoValorEfectivo", function () {
         $("#nuevoCambioEfectivo").val(0)
     }
     
+})
+
+
+$("#btnFinalizarVenta").on('click', function() {
+
+    var idVenta = $("#idVenta").val()
+    var url = $("#url").val()
+
+    var productos = []
+
+    $(".producto-item").each(function(){
+        
+        var idProducto = $(this).find('.nuevaCantidadProducto').attr('idProducto')
+        var cantidad = parseInt($(this).find('.nuevaCantidadProducto').val())
+        var precio = parseFloat($(this).find('.nuevoPrecioProducto').val())
+
+        productos.push({
+            id: idProducto,
+            cantidad: cantidad,
+            precio: precio
+        })
+
+    })
+
+    var impuesto = $("#nuevoImpuestoVenta").val()
+    var total = $("#nuevoPrecioTotal").val()
+    var neto = $("#nuevoPrecioNeto").val()
+    var metodo = $("#nuevoMetodoPago").val()
+
+    if(metodo != 'Efectivo'){
+
+        var metodo_pago = metodo +'-'+ $("#nuevoCodigoTransaccion").val()
+
+    }else{
+
+        var metodo_pago = metodo
+    }
+
+    var pago = []
+    pago.push({
+        impuesto: impuesto,
+        neto: neto,
+        total: total,
+        metodo_pago: metodo_pago
+    })
+
+    $.ajax({
+        url: url + '/Finalizar-Venta',
+        type: 'POST',
+        data: {
+            idVenta: idVenta,
+            productos: productos,
+            pago: pago
+        },
+        success: function () {
+           location.reload()
+        }
+    });
+
+
 })

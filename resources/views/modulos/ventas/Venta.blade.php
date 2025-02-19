@@ -172,11 +172,17 @@
 
                             </div>
 
-                            <div class="box-footer">
+                            @if ($venta->estado != 'Finalizada')
 
-                                <button class="btn btn-success">Finalizar Venta</button>
-            
-                            </div>
+                                <div class="box-footer" id="btnFinalizarVenta" style="display: none">
+
+                                    <button class="btn btn-success">Finalizar Venta</button>                
+
+                                </div> 
+
+                            @endif
+
+      
                         </div>
 
 
