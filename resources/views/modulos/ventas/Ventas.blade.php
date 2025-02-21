@@ -60,6 +60,7 @@
                                 <th>{{ $venta->id_sucursal }}</th>
                                 <th>$ {{ $venta->impuesto }}</th>
                                 <th>
+                                    
                                     <a href="{{ url('Venta/'.$venta->id) }}">
                                         <button class="btn btn-primary btnEditarVenta" >Administrar</button>
                                     </a>

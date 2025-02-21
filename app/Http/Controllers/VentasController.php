@@ -165,6 +165,45 @@ class VentasController extends Controller
 
     }
 
+    public function FinalizarVenta(Request $request)
+    {
+      
+        $idVenta = $request->idVenta;
+        $productos = $request->productos;
+        $pagos = $request->pago[0];
+
+        foreach($productos as $productoData){
+
+            $producto = Productos::find($productoData['id']);
+
+            DB::table('venta_productos')->where('id_venta', $idVenta)
+            ->where('id_producto', $productoData['id'])
+            ->update([
+                'cantidad' => $productoData['cantidad'],
+                'precio' => $productoData['precio']
+            ]);
+
+            $nuevoStock = $producto->stock - $productoData['cantidad'];
+
+            $producto->stock = $nuevoStock;
+
+            $nuevoProductoVenta = $producto->ventas + 1;
+
+            $producto->ventas = $nuevoProductoVenta;
+
+            $producto->save();
+        }
+
+        $venta = Ventas::find($idVenta);
+        $venta->impuesto = $pagos['impuesto'];
+        $venta->neto = $pagos['neto'];
+        $venta->total = $pagos['total'];
+        $venta->metodo_pago = $pagos['metodo_pago'];
+        $venta->estado = 'Finalizada';
+
+        $venta->save();
+    }
+
 
 
 }
