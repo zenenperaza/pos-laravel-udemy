@@ -331,7 +331,7 @@ class VentasController extends Controller
                     <td style="border-right: 1px solid #666; color:#333; background-color:white; width: 320px"></td>
 
                     <td style="border-bottom: 1px solid #666; width: 100px; text-align:center">Neto: </td>
-                    <td style="border: 1px solid #666; width: 100px; text-align:center">$ '.$venta->neto.'</td>
+                    <td style="border: 1px solid #666; width: 100px; text-align:center">$ '.number_format( $venta->neto , 2, ',', '.' ) .'</td>
                 </tr>                 
 
                 <tr>
@@ -345,7 +345,7 @@ class VentasController extends Controller
                     <td style="border-right: 1px solid #666; color:#333; background-color:white; width: 320px"></td>
 
                     <td style="border-bottom: 1px solid #666; width: 100px; text-align:center">Total: </td>
-                    <td style="border: 1px solid #666; width: 100px; text-align:center">% '.$venta->total.'</td>
+                    <td style="border: 1px solid #666; width: 100px; text-align:center">% '.number_format( $venta->total , 2, ',', '.' ).'</td>
                 </tr>               
             </table>';
 
@@ -356,6 +356,11 @@ class VentasController extends Controller
         
 
 
+    }
+
+    public function Reportes(){
+
+        return view('modulos.Ventas.Reportes');
     }
 
 

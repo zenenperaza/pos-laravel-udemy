@@ -83,3 +83,6 @@ Route::get('Cargar-Productos-Venta/{id_venta}', [VentasController::class, 'Carga
 Route::post('Quitar-Producto-Venta', [VentasController::class, 'QuitarProductoVenta']);
 Route::post('Finalizar-Venta', [VentasController::class, 'FinalizarVenta']);
 Route::get('Factura/{id_venta}', [VentasController::class, 'Factura']);
+
+//REPORTES
+Route::get('Reportes', [VentasController::class, 'Reportes']);
