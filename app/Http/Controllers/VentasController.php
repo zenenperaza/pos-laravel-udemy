@@ -8,6 +8,7 @@ use App\Models\Sucursales;
 use App\Models\Ventas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use TCPDF;
 
 class VentasController extends Controller
 {
@@ -204,6 +205,158 @@ class VentasController extends Controller
         $venta->save();
     }
 
+    public function Factura($id_venta)
+    {
+        $pdf = new TCPDF();
+
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetTitle('System POS');
+
+        $pdf->AddPage();
+
+        $logoPath = public_path('storage/plantilla/logo-negro-bloque.png');
+
+        $venta = Ventas::find($id_venta);
+
+        $html = '<table>
+    <tr>
+        <td style="width: 150px; background-color:blue; text-align:center"><img src="'.$logoPath.'" width="120px" alt=""> </td>
+        <td style="background-color:red" width="140px">      
+            <div style="font-size: 8.5px; text-align:left; line-height:15px">
+                NIT: J-398785693
+                <br>
+                DIRECCION: Av. 4 con calle 5
+            </div>
+        </td>
+        <td style="background-color:black" width="140px">    
+            <div style="font-size: 8.5px; text-align:left; line-height:15px; ">                
+                TELEFONO: 0414-1234567
+                <br>
+                EMAIL: zenenperaza@gmail.com
+
+            </div>
+        </td>
+        <td style="background-color:white" width="110px">
+            <div style="font-size: 8.5px; text-align:center; line-height:15px; color:red">          
+                FACTURA: '.$venta->codigo.'
+                <br>
+                FECHA: '.$venta->fecha.'
+            </div>
+        </td>
+    </tr>
+<table>
+    <table>
+        <tr>
+        <td style="width: 540px"></td>
+        </tr>
+    <table>
+
+    <table>
+        <tr>
+           <td style="width: 340px; background-color: white; border: 1px solid #666">
+            CLIENTE: '.$venta->CLIENTE->cliente.'
+           </td>
+
+            <td style="width: 200px; background-color: white; border: 1px solid #666">
+            FECHA: '.$venta->fecha.'
+           </td>
+        </tr>
+        <tr>
+           <td style="width: 540px; background-color: white; border: 1px solid #666">
+            VENDEDOR: '.$venta->VENDEDOR->name.'
+           </td>
+           
+           <td style="width: 540px; background-color: white; border: 1px solid #666">
+            
+           </td>
+
+           
+        </tr>
+    <table>';
+
+    $html .= '<table border-top="1" style="width: 540px; background-color: white; border-top: 1px solid #666">
+    
+        <tr>
+        <td></td>
+        
+        </tr>
+    </table>';
+
+    $html .= '<table border="1" style="font-size:10px; padding: 5px 10px; width: 540px; background-color: white">
+        <tr style="background-color: #c0c0c0">
+            <td style="border: 1px solid #666; width: 240px; text-align:center">PRODUCTO</td>        
+      
+            <td style="border: 1px solid #666; width: 80px; text-align:center">CANTIDAD</td>        
+     
+            <td style="border: 1px solid #666; width: 100px; text-align:center">PRECIO UNTI</td>        
+      
+            <td style="border: 1px solid #666; width: 100px; text-align:center">PRECIO TOTAL</td>        
+        </tr>
+        
+    </table>';
+
+     $productosVenta = DB::table('venta_productos')
+     ->join('productos', 'venta_productos.id_producto', '=', 'productos.id')
+     ->where('venta_productos.id_venta', $id_venta)
+     ->get();
+
+     $html .= '<table border="1" style="font-size:10px; padding: 5px 10px; width: 540px; background-color: white">
+            ';
+
+     foreach($productosVenta as $producto){
+    
+        $html .= '<tr style="background-color: white"><td style="border: 1px solid #666; width: 240px; text-align:center">'.$producto->descripcion.'</td>        
+        
+                <td style="border: 1px solid #666; width: 80px; text-align:center">'.$producto->cantidad.'</td>        
+        
+                <td style="border: 1px solid #666; width: 100px; text-align:center">'.$producto->precio_venta.'</td>        
+        
+                <td style="border: 1px solid #666; width: 100px; text-align:center">'.$producto->precio_venta * $producto->cantidad.'</td></tr>';
+
+    }
+
+    $html .= '            
+        </table>';
+
+        
+    $html .= '<table style="font-size:10px; padding: 5px 10px">
+                <tr>
+                    <td style="color:#333; background-color:white; width: 320px"></td>
+
+                    <td style="border-bottom: 1px solid #666; width: 100px; text-align:center"></td>
+                    <td style="border-bottom: 1px solid #666; width: 100px; text-align:center"></td>
+                </tr> 
+
+                <tr>
+                    <td style="border-right: 1px solid #666; color:#333; background-color:white; width: 320px"></td>
+
+                    <td style="border-bottom: 1px solid #666; width: 100px; text-align:center">Neto: </td>
+                    <td style="border: 1px solid #666; width: 100px; text-align:center">$ '.$venta->neto.'</td>
+                </tr>                 
+
+                <tr>
+                    <td style="border-right: 1px solid #666; color:#333; background-color:white; width: 320px"></td>
+
+                    <td style="border-bottom: 1px solid #666; width: 100px; text-align:center">Impuesto: </td>
+                    <td style="border: 1px solid #666; width: 100px; text-align:center">% '.$venta->impuesto.'</td>
+                </tr>              
+
+                <tr>
+                    <td style="border-right: 1px solid #666; color:#333; background-color:white; width: 320px"></td>
+
+                    <td style="border-bottom: 1px solid #666; width: 100px; text-align:center">Total: </td>
+                    <td style="border: 1px solid #666; width: 100px; text-align:center">% '.$venta->total.'</td>
+                </tr>               
+            </table>';
+
+
+        $pdf->writeHTML($html, true, false, true, false, '');
+
+        $pdf->Output('Factura-'.$venta->codigo.'.pdf', 'I');
+        
+
+
+    }
 
 
 }

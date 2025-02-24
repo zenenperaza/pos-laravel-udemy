@@ -82,3 +82,4 @@ Route::post('Agregar-Producto-Venta', [VentasController::class, 'AgregarProducto
 Route::get('Cargar-Productos-Venta/{id_venta}', [VentasController::class, 'CargarProductosVenta']);
 Route::post('Quitar-Producto-Venta', [VentasController::class, 'QuitarProductoVenta']);
 Route::post('Finalizar-Venta', [VentasController::class, 'FinalizarVenta']);
+Route::get('Factura/{id_venta}', [VentasController::class, 'Factura']);

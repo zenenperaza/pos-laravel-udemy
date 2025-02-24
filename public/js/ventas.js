@@ -36,7 +36,7 @@ $(".table").on("click", ".AgregarProducto", function () {
 
                                             '<div class="input-group">'+
 
-                                                '<input type="number" idProducto="'+respuesta.id+'" class="form-control nuevaCantidadProducto" value="'+respuesta.cantidad+'"  stock="'+respuesta.stock+'"  min="1" required>'+
+                                                '<input type="number" idProducto="'+respuesta.id+'" class="form-control nuevaCantidadProducto" value="'+respuesta.cantidad+'"  stock="'+respuesta.stock+'"  min="1" >'+
 
                                             '</div>'+
 
@@ -48,7 +48,7 @@ $(".table").on("click", ".AgregarProducto", function () {
 
                                                 '<span class="input-group-addon"><i class="ion ion-social-usd"></i></span>'+
 
-                                               '<input type="text" class="form-control nuevoPrecioProducto" id="precio-p-'+respuesta.id+'" precioReal="'+respuesta.precio_venta+'" value="'+respuesta.precio_venta+'" readonly>'+
+                                               '<input type="text" class="form-control nuevoPrecioProducto" id="precio-p-'+respuesta.id+'" precioReal="'+respuesta.precio_venta+'" value="'+respuesta.precio_venta * respuesta.cantidad+'" readonly>'+
 
                                             '</div>'+
 
@@ -137,7 +137,7 @@ function CargarProductosVenta() {
 
                                             '<div class="input-group">'+
                                                 '<span class="input-group-addon"><i class="ion ion-social-usd"></i></span>'+
-                                            '<input type="text" class="form-control nuevoPrecioProducto" id="precio-p-'+respuesta.id+'" precioReal="'+respuesta.precio_venta+'" value="'+respuesta.precio_venta+'" readonly>'+
+                                            '<input type="text" class="form-control nuevoPrecioProducto" id="precio-p-'+respuesta.id+'" precioReal="'+respuesta.precio_venta+'" value="'+respuesta.precio_venta * respuesta.cantidad+'" readonly>'+
 
                                             '</div>'+
 
@@ -444,5 +444,28 @@ $("#btnFinalizarVenta").on('click', function() {
         }
     });
 
+
+})
+
+$(".table").on("click", ".btnEliminarVenta", function () {
+
+    var idVenta = $(this).attr("idVenta")
+
+    Swal.fire({
+
+        title: '¿Eliminar Venta  ?',
+        icon: 'warning',
+        showCancelButton: true,
+        cancelButtonText: 'Cancelar',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Eliminar',
+        confirmButtonColor: '#3085d6'
+    }).then((result)=> {
+
+        if (result.isConfirmed) {
+            
+            window.location = "Eliminar-Venta/"+idVenta
+        }
+    })
 
 })

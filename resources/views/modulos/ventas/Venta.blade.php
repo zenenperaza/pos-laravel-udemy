@@ -255,7 +255,7 @@
                                                         @if($producto->stock > 0)   
                                                         
                                                             @if ($producto->en_venta)
-                                                                <button class="btn btn-default"  id="producto-{{ $producto->id }}"  >Agregar</button>           
+                                                                <button class="btn btn-default"  id="producto-{{ $producto->id }}"   idProducto="{{ $producto->id }}" >Agregar</button>           
                                                             @else                                                            
                                                                 <button class="btn btn-primary AgregarProducto"  id="producto-{{ $producto->id }}" idProducto="{{ $producto->id }}" stock="{{ $producto->stock }}">Agregar</button>                                                        
                                                             @endif

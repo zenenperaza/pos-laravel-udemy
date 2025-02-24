@@ -60,11 +60,17 @@
                                 <th>{{ $venta->id_sucursal }}</th>
                                 <th>$ {{ $venta->impuesto }}</th>
                                 <th>
+                                    @if ($venta->estado != 'Finalizada')
+                                        <button class="btn btn-danger btnEliminarVenta" idVenta="{{ $venta->id }}" venta="{{ $venta->venta }}" ><i class="fa fa-trash"></i></button>
+                                    @else
+                                    <a href="{{ url('Factura/'.$venta->id) }}" target="_blank" rel="noopener noreferrer">
+                                        <button class="btn btn-info" ><i class="fa fa-print"></i></button>
+                                    </a>
+                                    @endif
                                     
                                     <a href="{{ url('Venta/'.$venta->id) }}">
                                         <button class="btn btn-primary btnEditarVenta" >Administrar</button>
                                     </a>
-                                    <button class="btn btn-danger btnEliminarVenta" idVenta="{{ $venta->id }}" venta="{{ $venta->venta }}" ><i class="fa fa-trash"></i></button>
                                 </th> 
 
                             </tr>
@@ -72,7 +78,6 @@
 
                     </tbody>
                 </table>
-
 
             </div>
         </div>
