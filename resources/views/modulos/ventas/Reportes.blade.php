@@ -6,7 +6,7 @@
 
     <section class="content-header">
 
-        <h1>Reportes</h1>
+        <h1>Reportes de ventas</h1>
 
     </section>
 
@@ -15,10 +15,65 @@
         <div class="box">
 
             <div class="box-header with-border">
-                <button class="btn btn-primary"  data-toggle="modal" data-target="#modalAgregarSucursal">Agregar Sucursal</button>
+            
             </div>
 
             <div class="box-body">
+
+                <div class="row">
+                    {{-- PRIMER GRAFICO --}}
+                    <div class="col-xs-12">
+
+                        <div class="box box-solid bg-teal-gradient">
+
+                            <div class="box-header">
+                                <i class="fa fa-th"></i>
+                                <h3 class="box-title">Grafico de ventas</h3>
+                            </div>
+
+                            <div class="box-body border-radius-none nuevoGraficoVentas">
+
+                                <div class="chart" id="line-chart-ventas" style="height:250px">
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- SEGUNDO GRAFICO --}}
+                    <div class="col-md-6 col-xs-12">
+
+                        <div class="box box-default ">
+
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Productos mas vendidos</h3>
+                            </div>
+
+                            <div class="box-body ">
+
+                                <div class="row">
+
+                                    <div class="col-md-7">
+                                        <div class="chart-responsive" >
+                                            <canvas id="pieChart" style="height: 150px"></canvas>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-5">
+                                        
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
 
             </div>
         </div>
@@ -27,59 +82,5 @@
 
 </div>
 
-<div class="modal fade" id="modalAgregarSucursal">
-
-    <div class="modal-dialog">
-
-        <div class="modal-content">
-
-            <form action="" method="post">
-
-                <div class="modal-header" style="background: #3c8dbc; color:white">
-
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-
-                    <h4 class="modal-title">Agregar Sucursal</h4>
-
-                </div>
-
-                <div class="modal-body">
-
-                    <div class="box-body">
-
-                        <div class="form-group">
-
-                            <div class="input-group">
-
-                                <span class="input-group-addon"><i class="fa fa-building"></i></span>
-
-                                <input type="text" name="nombre" id="" class="form-control input-lg" placeholder="Ingresar Sucursal" required>    
-
-                            </div>
-
-                          
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="modal-footer">
-
-                    <button class="btn btn-danger pull-left" type="button" data-dismiss="modal">Salir</button>
-                    
-                    <button class="btn btn-primary" type="submit" >Agregar Susucrsla</button>
-
-
-                </div>
-
-            </form>
-
-        </div>
-
-    </div>
-
-</div>
-    
     
 @endsection

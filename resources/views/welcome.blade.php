@@ -57,6 +57,9 @@
     <!-- InputMask -->
     <script src="{{ url('bower_components/moment/moment.min.js') }}"></script>
     <script src="{{ url('bower_components/inputmask/jquery.inputmask.min.js') }}"></script>
+
+    <!-- ChartJS -->
+    <script src="{{ url('bower_components/chart.js/Chart.js') }}"></script>
 </head>
 <body class="hold-transition skin-blue sidebar-mini login-page">
 
@@ -96,7 +99,9 @@
 <!-- SlimScroll -->
 <script src="{{ url('bower_components/jquery-slimscroll/jquery.slimscroll.min.js') }}"></script>
 <!-- ChartJS -->
-<script src="{{ url('bower_components/Chart.js/Chart.js') }}"></script>
+<script src="{{ url('bower_components/chart.js/Chart.js') }}"></script>
+<script src="{{ url('bower_components/morris.js/morris.js') }}"></script>
+<script src="{{ url('bower_components/raphael/raphael.js') }}"></script>
 
 <!-- DATATABLES -->
 <script src="{{ url('bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
@@ -132,5 +137,60 @@
     </script>
   
 @endif
+
+@php
+  $exp = explode('/', $_SERVER['REQUEST_URI']);
+
+@endphp
+
+
+@if ($exp[3] == 'Reportes')
+
+@php
+
+// dd($noRepetirFechas);
+
+foreach($noRepetirFechas as $fecha){
+    
+  $ventas = $sumaPagoMes[$fecha] ?? 0;
+
+  echo "{ y: '".$fecha."', ventas: ".$ventas." },";
+}
+
+@endphp
+
+    <script type="text/javascript">
+      var line = new Morris.Line({
+
+        element: 'line-chart-ventas',
+        resize: true,
+        data: [
+          
+          @php
+            
+            foreach($noRepetirFechas as $fecha){
+                
+              $ventas = $sumaPagoMes[$fecha] ?? 0;
+
+              echo "{ y: '".$fecha."', ventas: ".$ventas." },";
+            }
+
+          @endphp
+
+        ],
+
+        xkey: 'y',
+        ykeys: ['ventas'],
+        labels: ["Ventas"],
+        lineColors: ["red"],
+        hideHover: 'auto'
+        
+      })
+    
+    </script>
+    
+@endif
+
+
 </body>
 </html>
