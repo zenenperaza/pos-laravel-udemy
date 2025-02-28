@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Clientes;
 use App\Models\Productos;
 use App\Models\Sucursales;
+use App\Models\User;
 use App\Models\Ventas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -427,8 +428,62 @@ class VentasController extends Controller
         ->orderByDesc('ventas')
         ->take(10)->get();
 
+        $colores = array( '#f56954', '#00a65a', '#f39c12', '#00c0ef');
 
-        return view('modulos.ventas.Reportes', compact('noRepetirFechas', 'sumaPagoMes', 'productosMasVendidos'));
+        //TERCER GRAFICO
+            $usuarios = User::all();
+            $sumaTotalVendedores = [];
+
+            foreach($ventas as $valueVentas){
+
+                foreach($usuarios as $valueUsuarios){
+
+                    if ($valueUsuarios["id"] == $valueVentas["id_vendedor"]) {
+
+                        $nombreVendedor = $valueUsuarios["name"];
+
+                        if (!isset($sumaTotalVendedores[$nombreVendedor])) {
+                            
+                            $sumaTotalVendedores[$nombreVendedor] = 0;
+                        }
+
+                        $sumaTotalVendedores[$nombreVendedor] += $valueVentas["neto"];
+
+                    }
+                }
+            }
+
+            $noRepetirNombres = array_keys($sumaTotalVendedores);
+
+
+
+            //CUARTO GRAFICO
+            $clientes = Clientes::all();
+            $sumaTotalClientes = [];
+
+            foreach($ventas as $valueVentas){
+
+                foreach($clientes as $valueClientes){
+
+                    if ($valueUsuarios["id"] == $valueVentas["id_vendedor"]) {
+
+                        $nombreVendedor = $valueUsuarios["name"];
+
+                        if (!isset($sumaTotalVendedores[$nombreVendedor])) {
+                            
+                            $sumaTotalVendedores[$nombreVendedor] = 0;
+                        }
+
+                        $sumaTotalVendedores[$nombreVendedor] += $valueVentas["neto"];
+
+                    }
+                }
+            }
+
+            $noRepetirNombres = array_keys($sumaTotalVendedores);
+        
+
+        return view('modulos.ventas.Reportes', compact('noRepetirFechas', 'sumaPagoMes', 'productosMasVendidos', 'colores', 'noRepetirNombres', 'sumaTotalVendedores'));
     }
 
 

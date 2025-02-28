@@ -160,6 +160,8 @@ foreach($noRepetirFechas as $fecha){
 @endphp
 
     <script type="text/javascript">
+
+    //PRIMER GRAFICO
       var line = new Morris.Line({
 
         element: 'line-chart-ventas',
@@ -182,10 +184,82 @@ foreach($noRepetirFechas as $fecha){
         xkey: 'y',
         ykeys: ['ventas'],
         labels: ["Ventas"],
-        lineColors: ["red"],
+        lineColors: ["blue"],
         hideHover: 'auto'
         
       })
+
+      //SEGUNDO GRAFICO
+      var coloresFijos = [
+        '#f56954',
+        '#00a65a',
+        '#f39c12',
+        '#00c0ef',
+      ]
+
+        var pieData = [
+
+        @foreach($productosMasVendidos as $index => $producto)        
+        {
+            value: {{ $producto->venta }},
+            color: coloresFijos[{{ $index }} % coloresFijos.length],
+            highlight: coloresFijos[{{ $index }} % coloresFijos.length],
+            label: '{{ $producto->descripcion }}'
+          },          
+        @endforeach
+
+     
+
+       
+        ]
+
+        var pieOptions = {
+
+            //Boolean - Whether we should show a stroke on each segment
+            segmentShowStroke    : true,
+            //String - The colour of each segment stroke
+            segmentStrokeColor   : '#fff',
+            //Number - The width of each segment stroke
+            segmentStrokeWidth   : 2,
+            //Number - The percentage of the chart that we cut out of the middle
+            percentageInnerCutout: 50, // This is 0 for Pie charts
+            //Number - Amount of animation steps
+            animationSteps       : 100,
+            //String - Animation easing effect
+            animationEasing      : 'easeOutBounce',
+            //Boolean - Whether we animate the rotation of the Doughnut
+            animateRotate        : true,
+            //Boolean - Whether we animate scaling the Doughnut from the centre
+            animateScale         : false,
+            //Boolean - whether to make the chart responsive to window resizing
+            responsive           : true,
+            // Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
+            maintainAspectRatio  : true,
+
+          };
+
+          var pieChartCanvas = $("#pieChart").get(0).getContext('2d');
+          var pieChart = new Chart(pieChartCanvas);
+          pieChart.Doughnut(pieData, pieOptions);
+
+          //TERCER GRAFICA
+          var bar = new Morris.Bar({
+            element: 'bar-chart1',
+            resize: true,
+            data: [
+             <?php
+                foreach($noRepetirNombres as $value){
+
+                  echo "{ y: '".$value."', a: '".$sumaTotalVendedores[$value]."' },";
+                }
+             ?>
+            ],
+            barColors: ['#00a65a', '#f56954', '#f39c12', '#00c0ef'],
+            xkey: 'y',
+            ykeys: 'a',
+            labels: ['Ventas'],
+            hideHover: 'auto'
+          });
     
     </script>
     

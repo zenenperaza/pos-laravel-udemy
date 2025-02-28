@@ -149,13 +149,13 @@
                         <div class="form-group">
                             <div class="input-group">
 
-                                <span class="input-group-addon"><i class="fa fa-building"></i></span>
+                                <span class="input-group-addon"><i class="fa fa-users"></i></span>
 
-                                    <select name="id_venta" id="" class="form-control input-lg" required>
-                                        <option value="">Seleccionar Venta</option>
+                                    <select name="id_cliente" id="" class="form-control input-lg" required>
+                                        <option value="">Seleccionar Cliente</option>
 
-                                        @foreach($ventas as $venta)
-                                            <option value="{{ $venta->id }}">{{ $venta->venta }} - {{ $venta->documento }}</option>
+                                        @foreach($clientes as $cliente)
+                                            <option value="{{ $cliente->id }}">{{ $cliente->cliente }} - {{ $cliente->documento }}</option>
                                         @endforeach
 
                                     </select>                       
