@@ -15,6 +15,10 @@
         <div class="box">
 
             <div class="box-header with-border">
+
+                <a href="{{ url('/'.$ruta_PDF) }}" target="_blank">
+                    <button class="btn btn-default pull-right" style="margin-top: 5px">Generar reporte</button>
+                </a>
             
             </div>
 
@@ -136,7 +140,7 @@
                             </div>
                             <div class="box-body">
                                 <div class="chart-responsive">
-                                    <div class="chart" id="bar-chart1" style="height: 300px">
+                                    <div class="chart" id="bar-chart2" style="height: 300px">
 
                                     </div>
                                 </div>

@@ -465,25 +465,110 @@ class VentasController extends Controller
 
                 foreach($clientes as $valueClientes){
 
-                    if ($valueUsuarios["id"] == $valueVentas["id_vendedor"]) {
+                    if ($valueClientes["id"] == $valueVentas["id_cliente"]) {
 
-                        $nombreVendedor = $valueUsuarios["name"];
+                        $nombreCliente = $valueClientes["cliente"];
 
-                        if (!isset($sumaTotalVendedores[$nombreVendedor])) {
+                        if (!isset($sumaTotalClientes[$nombreCliente])) {
                             
-                            $sumaTotalVendedores[$nombreVendedor] = 0;
+                            $sumaTotalClientes[$nombreCliente] = 0;
                         }
 
-                        $sumaTotalVendedores[$nombreVendedor] += $valueVentas["neto"];
+                        $sumaTotalClientes[$nombreCliente] += $valueVentas["neto"];
 
                     }
                 }
             }
 
-            $noRepetirNombres = array_keys($sumaTotalVendedores);
+            $noRepetirClientes = array_keys($sumaTotalClientes);
+
+            $ruta_PDF = "Reportes-Ventas-PDF";
         
 
-        return view('modulos.ventas.Reportes', compact('noRepetirFechas', 'sumaPagoMes', 'productosMasVendidos', 'colores', 'noRepetirNombres', 'sumaTotalVendedores'));
+        return view('modulos.ventas.Reportes', compact('noRepetirFechas', 'sumaPagoMes', 'productosMasVendidos', 'colores', 'noRepetirNombres', 'sumaTotalVendedores', 'noRepetirClientes', 'sumaTotalClientes', 'ruta_PDF'));
+    }
+
+    public function ReportesPDF(){
+
+        $pdf = new TCPDF();
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetTitle('System POS');
+
+        $pdf->AddPage();
+
+        if(auth()->user()->rol == 'Admin'){
+            $ventas = Ventas::orderBy('id', 'asc')->get();
+        }else{
+            $ventas = Ventas::orderBy('id', 'asc')->where('id_sucursal', auth()->user()->id_sucursal)->get();
+        }
+
+
+        $html = '<table style="font-size: 10px; padding:5px">
+  <tr>
+    <td style="border: 1px solid #666; background-color:white; text-align:center">
+      CODIGO
+    </td>
+    <td style="border: 1px solid #666; background-color:white; text-align:center">
+      CLIENTE
+    </td>
+    <td style="border: 1px solid #666; background-color:white; text-align:center">
+      VENDEDOR
+    </td>
+    <td style="border: 1px solid #666; background-color:white; text-align:center">
+        PRODUCTO
+    </td>
+    <td style="border: 1px solid #666; background-color:white; text-align:center">
+      TOTAL
+    </td>
+    <td style="border: 1px solid #666; background-color:white; text-align:center">
+      FECHA
+    </td>
+  </tr>
+  
+  
+</table>';
+
+    foreach ($ventas as $venta) {
+        $productosVenta = DB::table('venta_productos')
+        ->join('productos', 'venta_productos.id_producto', '=', 'productos.id')
+        ->where('venta_productos.id_venta')->get();
+
+        $productos = '';
+
+        foreach($productosVenta as $productoVenta){
+            $productos .= $productoVenta->descripcion.' X '.$productoVenta->cantidad.'<br>';
+        }
+
+        $html .= '<table style="font-size: 10px; padding:5px">
+            <tr>
+            <td style="border: 1px solid #666; background-color:white; text-align:center">
+                '.$venta->codigo.'
+            </td>
+            <td style="border: 1px solid #666; background-color:white; text-align:center">
+                '.$venta->CLIENTE->cliente.'
+            </td>
+            <td style="border: 1px solid #666; background-color:white; text-align:center">
+                '.$venta->VENDEDOR->name.'
+            </td>
+            <td style="border: 1px solid #666; background-color:white; text-align:center">
+                '.$productos.'
+            </td>
+            <td style="border: 1px solid #666; background-color:white; text-align:center">
+                 '.$venta->total.'
+            </td>
+            <td style="border: 1px solid #666; background-color:white; text-align:center">
+                '.$venta->fecha.'
+            </td>
+            </tr>
+            </table>';
+    }
+        
+
+        $pdf->writeHTML($html, true, false, true, false, '');
+
+        $pdf->Output('reportes.pdf', 'I');
+
+
     }
 
 

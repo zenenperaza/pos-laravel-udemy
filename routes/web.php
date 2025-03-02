@@ -86,3 +86,4 @@ Route::get('Factura/{id_venta}', [VentasController::class, 'Factura']);
 
 //REPORTES
 Route::get('Reportes', [VentasController::class, 'Reportes']);
+Route::get('Reportes-Ventas-PDF', [VentasController::class, 'ReportesPDF']);

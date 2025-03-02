@@ -254,7 +254,27 @@ foreach($noRepetirFechas as $fecha){
                 }
              ?>
             ],
-            barColors: ['#00a65a', '#f56954', '#f39c12', '#00c0ef'],
+            barColors: ['#00a65a'],
+            xkey: 'y',
+            ykeys: 'a',
+            labels: ['Ventas'],
+            hideHover: 'auto'
+          });
+
+
+          //CUARTO GRAFICO
+          var bar = new Morris.Bar({
+            element: 'bar-chart2',
+            resize: true,
+            data: [
+             <?php
+                foreach($noRepetirClientes as $value){
+
+                  echo "{ y: '".$value."', a: '".$sumaTotalClientes[$value]."' },";
+                }
+             ?>
+            ],
+            barColors: ['#f6a'],
             xkey: 'y',
             ykeys: 'a',
             labels: ['Ventas'],
@@ -268,3 +288,6 @@ foreach($noRepetirFechas as $fecha){
 
 </body>
 </html>
+
+
+
