@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoriasController;
 use App\Http\Controllers\ClientesController;
+use App\Http\Controllers\InicioController;
 use App\Http\Controllers\ProductosController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuariosController;
@@ -14,12 +15,13 @@ Route::get('/', function () {
     return view('modulos.users.Ingresar');
 })->name('Ingresar');
 
-Route::get('Inicio', function () {
-    return view('modulos.Inicio');
-});
 
 
 Auth::routes();
+
+
+Route::get('Inicio', [InicioController::class, 'index']);
+
 
 // Route::get('Primer-Usuario', [UsuariosController::class, 'PrimerUsuario']);
 
@@ -87,3 +89,5 @@ Route::get('Factura/{id_venta}', [VentasController::class, 'Factura']);
 //REPORTES
 Route::get('Reportes', [VentasController::class, 'Reportes']);
 Route::get('Reportes-Ventas-PDF', [VentasController::class, 'ReportesPDF']);
+Route::get('ReportesFiltrados/{fechaInicial}/{fechaFinal}/{id_sucursal}', [VentasController::class, 'ReportesFiltrados']);
+Route::get('Reportes-Filtrados-Ventas-PDF/{fechaInicial}/{fechaFinal}/{id_sucursal}', [VentasController::class, 'ReportesFiltradosPDF']);

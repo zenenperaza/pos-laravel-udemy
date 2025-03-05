@@ -469,3 +469,28 @@ $(".table").on("click", ".btnEliminarVenta", function () {
     })
 
 })
+
+$(".btnFiltrar").on('click', '.btnFiltrarReportes', function () {
+    
+    if($("#fechaI").val() == ''){
+        var fechaI = '0001/01/01'
+    } else{
+        var fechaI = $("#fechaI").val()
+    }
+
+    if($("#fechaF").val() == ''){
+        var fechaF = '9999/12/31'
+    } else{
+        var fechaF = $("#fechaF").val()
+    }
+
+    var url = $(this).attr('url')
+    var sucursalID = $('#id_sucursal').val()
+
+    var FechaInicial = fechaI.replace(/\//g, "-")
+    var FechaFinal = fechaF.replace(/\//g, "-")
+
+    window.location = url+'/ReportesFiltrados/'+FechaInicial+'/'+FechaFinal+'/'+sucursalID
+
+} )
+

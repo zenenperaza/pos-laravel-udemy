@@ -483,9 +483,11 @@ class VentasController extends Controller
             $noRepetirClientes = array_keys($sumaTotalClientes);
 
             $ruta_PDF = "Reportes-Ventas-PDF";
+
+            $sucursales = Sucursales::where('estado',1)->get();
         
 
-        return view('modulos.ventas.Reportes', compact('noRepetirFechas', 'sumaPagoMes', 'productosMasVendidos', 'colores', 'noRepetirNombres', 'sumaTotalVendedores', 'noRepetirClientes', 'sumaTotalClientes', 'ruta_PDF'));
+        return view('modulos.ventas.Reportes', compact('noRepetirFechas', 'sumaPagoMes', 'productosMasVendidos', 'colores', 'noRepetirNombres', 'sumaTotalVendedores', 'noRepetirClientes', 'sumaTotalClientes', 'ruta_PDF', 'sucursales'));
     }
 
     public function ReportesPDF(){
@@ -503,73 +505,454 @@ class VentasController extends Controller
         }
 
 
-        $html = '<table style="font-size: 10px; padding:5px">
-  <tr>
-    <td style="border: 1px solid #666; background-color:white; text-align:center">
-      CODIGO
-    </td>
-    <td style="border: 1px solid #666; background-color:white; text-align:center">
-      CLIENTE
-    </td>
-    <td style="border: 1px solid #666; background-color:white; text-align:center">
-      VENDEDOR
-    </td>
-    <td style="border: 1px solid #666; background-color:white; text-align:center">
-        PRODUCTO
-    </td>
-    <td style="border: 1px solid #666; background-color:white; text-align:center">
-      TOTAL
-    </td>
-    <td style="border: 1px solid #666; background-color:white; text-align:center">
-      FECHA
-    </td>
-  </tr>
+        $html = '<h2>Ventas</h2><table style="font-size: 10px; padding:5px">
+            <tr>
+                <td style="border: 1px solid #666; background-color:white; text-align:center">
+                CODIGO
+                </td>
+                <td style="border: 1px solid #666; background-color:white; text-align:center">
+                CLIENTE
+                </td>
+                <td style="border: 1px solid #666; background-color:white; text-align:center">
+                VENDEDOR
+                </td>
+                <td style="border: 1px solid #666; background-color:white; text-align:center">
+                    PRODUCTO
+                </td>
+                <td style="border: 1px solid #666; background-color:white; text-align:center">
+                TOTAL
+                </td>
+                <td style="border: 1px solid #666; background-color:white; text-align:center">
+                FECHA
+                </td>
+            </tr>
   
   
-</table>';
+        </table>';
 
-    foreach ($ventas as $venta) {
-        $productosVenta = DB::table('venta_productos')
-        ->join('productos', 'venta_productos.id_producto', '=', 'productos.id')
-        ->where('venta_productos.id_venta')->get();
+            foreach ($ventas as $venta) {
+                $productosVenta = DB::table('venta_productos')
+                ->join('productos', 'venta_productos.id_producto', '=', 'productos.id')
+                ->where('venta_productos.id_venta', $venta->id)->get();
 
-        $productos = '';
+                $productos = '';
 
-        foreach($productosVenta as $productoVenta){
-            $productos .= $productoVenta->descripcion.' X '.$productoVenta->cantidad.'<br>';
+                foreach($productosVenta as $productoVenta){
+                    $productos .= $productoVenta->descripcion.' X '.$productoVenta->cantidad.'<br>';
+                }
+
+                $html .= '<table style="font-size: 10px; padding:5px">
+                    <tr>
+                    <td style="border: 1px solid #666; background-color:white; text-align:center">
+                        '.$venta->codigo.'
+                    </td>
+                    <td style="border: 1px solid #666; background-color:white; text-align:center">
+                        '.$venta->CLIENTE->cliente.'
+                    </td>
+                    <td style="border: 1px solid #666; background-color:white; text-align:center">
+                        '.$venta->VENDEDOR->name.'
+                    </td>
+                    <td style="border: 1px solid #666; background-color:white; text-align:center">
+                        '.$productos.'
+                    </td>
+                    <td style="border: 1px solid #666; background-color:white; text-align:center">
+                        '.$venta->total.'
+                    </td>
+                    <td style="border: 1px solid #666; background-color:white; text-align:center">
+                        '.$venta->fecha.'
+                    </td>
+                    </tr>
+                    </table>';
+            }
+
+            $html .= '<hr><h2>Productos mas vendidos<h2>
+            <table style="font-size: 10px; padding:5px">
+                <tr>
+                    <td style="border: 1px solid #666; background-color:white; text-align:center">
+                        PRODUCTO
+                    </td>
+                    <td style="border: 1px solid #666; background-color:white; text-align:center">
+                    CANTIDAD
+                    </td>
+                    <td style="border: 1px solid #666; background-color:white; text-align:center">
+                    PORCENTAJE
+                    </td>
+            
+                </tr>
+                
+                
+                </table>';
+
+                //
+
+                if(auth()->user()->rol == 'Admin'){
+
+                    $ventas2 = Ventas::pluck('id')->toArray();
+
+                }else{
+
+                    $ventas2 = Ventas::orderBy('id', 'asc')
+                    ->where('id_sucursal', auth()->user()->id_sucursal)
+                    ->pluck('id')->toArray();
+                }
+
+                $totalVentas = count($ventas2);
+
+                $totalProductosVendidos = db::table('venta_productos')
+                ->whereIn('venta_productos.id_venta', $ventas2)
+                ->count();
+
+                $productosMasVendidos = DB::table('venta_productos')
+                ->join('productos', 'venta_productos.id_producto', '=', 'productos.id')
+                ->whereIn('venta_productos.id_venta', $ventas2)
+                ->select(
+
+                    'venta_productos.id_producto',
+                    'productos.descripcion',
+                    'productos.ventas',
+                    DB::raw('COUNT(*) as venta'),
+                    DB::raw('ROUND((COUNT(*) / '.$totalProductosVendidos.') * 100, 2) as porcentaje')
+                )
+                ->groupBy('venta_productos.id_producto', 'productos.descripcion', 'productos.ventas')
+                ->orderByDesc('ventas')
+                ->take(10)->get();
+
+
+                    foreach ($productosMasVendidos as $producto) {
+                    $html .= '
+                        <table style="font-size: 10px; padding:5px">
+                            <tr>
+                                <td style="border: 1px solid #666; background-color:white; text-align:center">
+                                    '.$producto->descripcion.'
+                                </td>
+                                <td style="border: 1px solid #666; background-color:white; text-align:center">
+                                '.$producto->ventas.'
+                                </td>
+                                <td style="border: 1px solid #666; background-color:white; text-align:center">
+                                '.$producto->porcentaje.' %
+                                </td>
+                        
+                            </tr>
+                            
+                            
+                            </table>';
+                    }
+
+                
+
+                $pdf->writeHTML($html, true, false, true, false, '');
+
+                $pdf->Output('reportes.pdf', 'I');
+
+
+    }
+
+    public function ReportesFiltrados($fechaInicial, $fechaFinal, $id_sucursal){
+
+        $fechaInicio = $fechaInicial. ' 00:00';
+        $fechaFin = $fechaFinal. ' 23:59';
+
+        if($id_sucursal != 0){
+            $ventas = Ventas::orderBy('id', 'asc')
+            ->where('id_sucursal', $id_sucursal)
+            ->whereBetween('fecha', [$fechaInicio, $fechaFin])
+            ->get();
+
+        }else{
+
+            $ventas = Ventas::orderBy('id', 'asc')
+            ->whereBetween('fecha', [$fechaInicio, $fechaFin])
+            ->get();
         }
 
-        $html .= '<table style="font-size: 10px; padding:5px">
-            <tr>
-            <td style="border: 1px solid #666; background-color:white; text-align:center">
-                '.$venta->codigo.'
-            </td>
-            <td style="border: 1px solid #666; background-color:white; text-align:center">
-                '.$venta->CLIENTE->cliente.'
-            </td>
-            <td style="border: 1px solid #666; background-color:white; text-align:center">
-                '.$venta->VENDEDOR->name.'
-            </td>
-            <td style="border: 1px solid #666; background-color:white; text-align:center">
-                '.$productos.'
-            </td>
-            <td style="border: 1px solid #666; background-color:white; text-align:center">
-                 '.$venta->total.'
-            </td>
-            <td style="border: 1px solid #666; background-color:white; text-align:center">
-                '.$venta->fecha.'
-            </td>
-            </tr>
-            </table>';
-    }
+        // dd($ventas);
+
+       // Primer grafico
+       $arrayFechas = array();
+       $sumaPagoMes = array();
+
+        foreach($ventas as $venta){
+
+            $fecha = substr($venta->fecha, 0, 7);
+
+            // dd($fecha);
+
+            $arrayFechas[] = $fecha;
+
+            if(!isset($sumaPagoMes[$fecha])){
+
+                $sumaPagoMes[$fecha] = 0;
+            }
+
+            $sumaPagoMes[$fecha] += $venta->total;
+        }
+
+        $noRepetirFechas = array_unique($arrayFechas);   
+        
+        // /SEGUNDO GRAFICO
+
+        if($id_sucursal != 0){
+
+            $ventas2 = Ventas::where('id_sucursal', $id_sucursal)->whereBetween('fecha', [$fechaInicio, $fechaFin])->pluck('id')->toArray();
+
+        }else{
+
+            $ventas2 = Ventas::whereBetween('fecha', [$fechaInicio, $fechaFin])
+            ->orderBy('id', 'asc')            
+            ->pluck('id')->toArray();
+        }
+
+        $totalVentas = count($ventas2);
+
+        $totalProductosVendidos = db::table('venta_productos')
+        ->whereIn('venta_productos.id_venta', $ventas2)
+        ->count();
+
+        $productosMasVendidos = DB::table('venta_productos')
+        ->join('productos', 'venta_productos.id_producto', '=', 'productos.id')
+        ->whereIn('venta_productos.id_venta', $ventas2)
+        ->select(
+
+            'venta_productos.id_producto',
+            'productos.descripcion',
+            'productos.imagen',
+            DB::raw('COUNT(*) as venta'),
+            DB::raw('ROUND((COUNT(*) / '.$totalProductosVendidos.') * 100, 2) as porcentaje')
+        )
+        ->groupBy('venta_productos.id_producto', 'productos.descripcion', 'productos.imagen')
+        ->orderByDesc('ventas')
+        ->take(10)->get();
+
+        $colores = array( '#f56954', '#00a65a', '#f39c12', '#00c0ef');
+
+        //TERCER GRAFICO
+            $usuarios = User::all();
+            $sumaTotalVendedores = [];
+
+            foreach($ventas as $valueVentas){
+
+                foreach($usuarios as $valueUsuarios){
+
+                    if ($valueUsuarios["id"] == $valueVentas["id_vendedor"]) {
+
+                        $nombreVendedor = $valueUsuarios["name"];
+
+                        if (!isset($sumaTotalVendedores[$nombreVendedor])) {
+                            
+                            $sumaTotalVendedores[$nombreVendedor] = 0;
+                        }
+
+                        $sumaTotalVendedores[$nombreVendedor] += $valueVentas["neto"];
+
+                    }
+                }
+            }
+
+            $noRepetirNombres = array_keys($sumaTotalVendedores);
+
+
+
+            //CUARTO GRAFICO
+            $clientes = Clientes::all();
+            $sumaTotalClientes = [];
+
+            foreach($ventas as $valueVentas){
+
+                foreach($clientes as $valueClientes){
+
+                    if ($valueClientes["id"] == $valueVentas["id_cliente"]) {
+
+                        $nombreCliente = $valueClientes["cliente"];
+
+                        if (!isset($sumaTotalClientes[$nombreCliente])) {
+                            
+                            $sumaTotalClientes[$nombreCliente] = 0;
+                        }
+
+                        $sumaTotalClientes[$nombreCliente] += $valueVentas["neto"];
+
+                    }
+                }
+            }
+
+            $noRepetirClientes = array_keys($sumaTotalClientes);
+            
+            $ruta_PDF = "Reportes-Filtrados-Ventas-PDF/".$fechaInicial."/".$fechaFinal."/".$id_sucursal;
+
+            $sucursales = Sucursales::where('estado',1)->get();
         
 
-        $pdf->writeHTML($html, true, false, true, false, '');
+        return view('modulos.ventas.Reportes', compact('noRepetirFechas', 'sumaPagoMes', 'productosMasVendidos', 'colores', 'noRepetirNombres', 'sumaTotalVendedores', 'noRepetirClientes', 'sumaTotalClientes', 'ruta_PDF', 'sucursales'));
+    }
+    
 
-        $pdf->Output('reportes.pdf', 'I');
+    public function ReportesFiltradosPDF($fechaInicial, $fechaFinal, $id_sucursal){
+
+        $pdf = new TCPDF();
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetTitle('System POS');
+        $pdf->AddPage();
+
+        $fechaInicio = $fechaInicial. ' 00:00';
+        $fechaFin= $fechaFinal. ' 23:59';
+
+        if($id_sucursal != 0){
+            $ventas = Ventas::orderBy('id', 'asc')
+            ->where('id_sucursal', $id_sucursal)
+            ->whereBetween('fecha', [$fechaInicio, $fechaFin])
+            ->get();
+        }else{
+            $ventas = Ventas::orderBy('id', 'asc')
+            ->whereBetween('fecha', [$fechaInicio, $fechaFin])
+            ->get();
+        }
+
+
+        $html = '<h2>Ventas</h2><table style="font-size: 10px; padding:5px">
+            <tr>
+                <td style="border: 1px solid #666; background-color:white; text-align:center">
+                CODIGO
+                </td>
+                <td style="border: 1px solid #666; background-color:white; text-align:center">
+                CLIENTE
+                </td>
+                <td style="border: 1px solid #666; background-color:white; text-align:center">
+                VENDEDOR
+                </td>
+                <td style="border: 1px solid #666; background-color:white; text-align:center">
+                    PRODUCTO
+                </td>
+                <td style="border: 1px solid #666; background-color:white; text-align:center">
+                TOTAL
+                </td>
+                <td style="border: 1px solid #666; background-color:white; text-align:center">
+                FECHA
+                </td>
+            </tr>
+  
+  
+        </table>';
+
+            foreach ($ventas as $venta) {
+                $productosVenta = DB::table('venta_productos')
+                ->join('productos', 'venta_productos.id_producto', '=', 'productos.id')
+                ->where('venta_productos.id_venta', $venta->id)->get();
+
+                $productos = '';
+
+                foreach($productosVenta as $productoVenta){
+                    $productos .= $productoVenta->descripcion.' X '.$productoVenta->cantidad.'<br>';
+                }
+
+                $html .= '<table style="font-size: 10px; padding:5px">
+                    <tr>
+                    <td style="border: 1px solid #666; background-color:white; text-align:center">
+                        '.$venta->codigo.'
+                    </td>
+                    <td style="border: 1px solid #666; background-color:white; text-align:center">
+                        '.$venta->CLIENTE->cliente.'
+                    </td>
+                    <td style="border: 1px solid #666; background-color:white; text-align:center">
+                        '.$venta->VENDEDOR->name.'
+                    </td>
+                    <td style="border: 1px solid #666; background-color:white; text-align:center">
+                        '.$productos.'
+                    </td>
+                    <td style="border: 1px solid #666; background-color:white; text-align:center">
+                        '.$venta->total.'
+                    </td>
+                    <td style="border: 1px solid #666; background-color:white; text-align:center">
+                        '.$venta->fecha.'
+                    </td>
+                    </tr>
+                    </table>';
+            }
+
+            $html .= '<hr><h2>Productos mas vendidos<h2>
+            <table style="font-size: 10px; padding:5px">
+                <tr>
+                    <td style="border: 1px solid #666; background-color:white; text-align:center">
+                        PRODUCTO
+                    </td>
+                    <td style="border: 1px solid #666; background-color:white; text-align:center">
+                    CANTIDAD
+                    </td>
+                    <td style="border: 1px solid #666; background-color:white; text-align:center">
+                    PORCENTAJE
+                    </td>
+            
+                </tr>
+                
+                
+                </table>';
+
+                //
+
+                if($id_sucursal != 0){
+
+                    $ventas2 = Ventas::where('id_sucursal', $id_sucursal)->whereBetween('fecha', [$fechaInicio, $fechaFin])->pluck('id')->toArray();
+
+                }else{
+
+                    $ventas2 = Ventas::orderBy('id', 'asc')
+                    ->whereBetween('fecha', [$fechaInicio, $fechaFin])
+                    ->pluck('id')->toArray();
+                }
+
+                $totalVentas = count($ventas2);
+
+                $totalProductosVendidos = db::table('venta_productos')
+                ->whereIn('venta_productos.id_venta', $ventas2)
+                ->count();
+
+                $productosMasVendidos = DB::table('venta_productos')
+                ->join('productos', 'venta_productos.id_producto', '=', 'productos.id')
+                ->whereIn('venta_productos.id_venta', $ventas2)
+                ->select(
+
+                    'venta_productos.id_producto',
+                    'productos.descripcion',
+                    'productos.ventas',
+                    DB::raw('COUNT(*) as venta'),
+                    DB::raw('ROUND((COUNT(*) / '.$totalProductosVendidos.') * 100, 2) as porcentaje')
+                )
+                ->groupBy('venta_productos.id_producto', 'productos.descripcion', 'productos.ventas')
+                ->orderByDesc('ventas')
+                ->take(10)->get();
+
+
+                    foreach ($productosMasVendidos as $producto) {
+                    $html .= '
+                        <table style="font-size: 10px; padding:5px">
+                            <tr>
+                                <td style="border: 1px solid #666; background-color:white; text-align:center">
+                                    '.$producto->descripcion.'
+                                </td>
+                                <td style="border: 1px solid #666; background-color:white; text-align:center">
+                                '.$producto->ventas.'
+                                </td>
+                                <td style="border: 1px solid #666; background-color:white; text-align:center">
+                                '.$producto->porcentaje.' %
+                                </td>
+                        
+                            </tr>
+                            
+                            
+                            </table>';
+                    }
+
+                
+
+                $pdf->writeHTML($html, true, false, true, false, '');
+
+                $pdf->Output('reportes-filtrados .pdf', 'I');
 
 
     }
+
+
 
 
 }
+
+

@@ -16,6 +16,39 @@
 
             <div class="box-header with-border">
 
+                <div class="col-md-2">
+                    <h4>Fecha inicial</h4>
+                    <input type="date" id="fechaI" class="form-control">
+                </div>
+
+                <div class="col-md-2">
+                    <h4>Fecha final</h4>
+                    <input type="date" id="fechaF" class="form-control">
+                </div>
+
+                @if (auth()->user()->rol == 'Admin')
+
+                    <div class="col-md-3">
+                        <h4>Sucursal:</h4>
+                        <select name="" id="id_sucursal" class="form-control">
+                            <option value="0">Seleccionar...</option>
+                            @foreach ($sucursales as $sucursal)
+                                <option value="{{ $sucursal->id }}">{{ $sucursal->nombre }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                
+                @else
+
+                    <input type="hidden" id="id_sucursal" value="{{ auth()->user()->id_sucursal }}">
+
+                @endif
+
+                <div class="col-md-3 btnFiltrar">
+                    <h4>&nbsp;</h4>
+                    <button class="btn btn-warning btnFiltrarReportes" url="{{ url('') }}">Filtrar</button>
+                </div>
+
                 <a href="{{ url('/'.$ruta_PDF) }}" target="_blank">
                     <button class="btn btn-default pull-right" style="margin-top: 5px">Generar reporte</button>
                 </a>
